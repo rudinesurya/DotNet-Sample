@@ -7,15 +7,16 @@ namespace DotNet_Sample.Data
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            if (!Categories.Any())
+            Database.OpenConnection();
+            if (Database.EnsureCreated())
             {
-                Categories.AddRange(AppDbContextSeed.GetFixedCategories());
-                SaveChangesAsync();
-            }
+                // Seed Categories
+                var categories = AppDbContextSeed.GetFixedCategories();
+                Categories.AddRange(categories);
 
-            if (!Products.Any())
-            {
-                Products.AddRange(AppDbContextSeed.GetFixedProducts());
+                // Seed Products
+                Products.AddRange(AppDbContextSeed.GetFixedProducts(categories));
+
                 SaveChangesAsync();
             }
         }
@@ -30,6 +31,9 @@ namespace DotNet_Sample.Data
 
         public DbSet<Order> Orders { get; set; }
 
-        public DbSet<Contact> Contacts { get; set; }
+        public Task<int> SaveChangesAsync()
+        {
+            return base.SaveChangesAsync();
+        }
     }
 }

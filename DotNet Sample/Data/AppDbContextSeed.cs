@@ -23,7 +23,7 @@ namespace DotNet_Sample.Data
             };
         }
 
-        public static IEnumerable<Product> GetFixedProducts()
+        public static IEnumerable<Product> GetFixedProducts(IEnumerable<Category> categories)
         {
             return new List<Product>()
             {
@@ -35,7 +35,7 @@ namespace DotNet_Sample.Data
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-1.png",
                     Price = 950.00M,
-                    CategoryId = Guid.Parse("64a7388c-65e9-42e1-bab1-39cd105f8675")
+                    CategoryId = categories.FirstOrDefault(c => c.Name.Equals("White")).Id
                 },
                 new Product()
                 {
@@ -45,7 +45,7 @@ namespace DotNet_Sample.Data
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "product-2.png",
                     Price = 840.00M,
-                    CategoryId = Guid.Parse("c921ef76-0af6-4ac9-a7fd-864b4898d60b")
+                    CategoryId = categories.FirstOrDefault(c => c.Name.Equals("Black")).Id
                 },
             };
         }
