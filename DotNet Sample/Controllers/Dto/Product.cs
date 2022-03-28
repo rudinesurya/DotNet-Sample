@@ -1,14 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using DotNet_Sample.Entity;
 
-namespace DotNet_Sample.Entity
+namespace DotNet_Sample.Controllers.Dto
 {
-    [Table("Products")]
     public class Product
     {
         public Guid Id { get; set; }
 
-        [Required, StringLength(80)]
         public string Name { get; set; }
 
         public string Summary { get; set; }
@@ -18,8 +15,6 @@ namespace DotNet_Sample.Entity
         public string ImageFile { get; set; }
 
         public decimal Price { get; set; }
-
-        public Guid CategoryId { get; set; }
 
         public Category Category { get; set; }
     }

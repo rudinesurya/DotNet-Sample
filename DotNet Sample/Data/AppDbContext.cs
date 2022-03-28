@@ -21,15 +21,15 @@ namespace DotNet_Sample.Data
             }
         }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<EProduct> Products { get; set; }
 
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<ECategory> Categories { get; set; }
 
-        public DbSet<Cart> Carts { get; set; }
+        public DbSet<ECart> Carts { get; set; }
 
-        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<ECartItem> CartItems { get; set; }
 
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<EOrder> Orders { get; set; }
 
         public Task<int> SaveChangesAsync()
         {

@@ -1,3 +1,5 @@
+using AutoMapper;
+using DotNet_Sample.Controllers.Mapper;
 using DotNet_Sample.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=DotNetSample.db"));
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

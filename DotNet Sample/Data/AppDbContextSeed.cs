@@ -4,17 +4,17 @@ namespace DotNet_Sample.Data
 {
     public class AppDbContextSeed
     {
-        public static IEnumerable<Category> GetFixedCategories()
+        public static IEnumerable<ECategory> GetFixedCategories()
         {
-            return new List<Category>()
+            return new List<ECategory>()
             {
-                new Category()
+                new ECategory()
                 {
                     Id = Guid.Parse("64a7388c-65e9-42e1-bab1-39cd105f8675"),
                     Name = "White",
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat.",
                 },
-                new Category()
+                new ECategory()
                 {
                     Id = Guid.Parse("c921ef76-0af6-4ac9-a7fd-864b4898d60b"),
                     Name = "Black",
@@ -23,11 +23,11 @@ namespace DotNet_Sample.Data
             };
         }
 
-        public static IEnumerable<Product> GetFixedProducts(IEnumerable<Category> categories)
+        public static IEnumerable<EProduct> GetFixedProducts(IEnumerable<ECategory> categories)
         {
-            return new List<Product>()
+            return new List<EProduct>()
             {
-                new Product()
+                new EProduct()
                 {
                     Id = Guid.Parse("2cff423d-0852-4406-ac3a-32a39a0253c0"),
                     Name = "IPhone X",
@@ -37,7 +37,7 @@ namespace DotNet_Sample.Data
                     Price = 950.00M,
                     CategoryId = categories.FirstOrDefault(c => c.Name.Equals("White")).Id
                 },
-                new Product()
+                new EProduct()
                 {
                     Id = Guid.Parse("c8e86dc0-17ab-4b0e-8205-1c29afe50c09"),
                     Name = "Samsung 10",

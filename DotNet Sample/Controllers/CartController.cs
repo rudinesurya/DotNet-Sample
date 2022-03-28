@@ -1,4 +1,6 @@
-﻿using DotNet_Sample.Data;
+﻿using AutoMapper;
+using DotNet_Sample.Controllers.Dto;
+using DotNet_Sample.Data;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,16 +12,19 @@ namespace DotNet_Sample.Controllers
     public class CartController : ControllerBase
     {
         private readonly AppDbContext DbContext;
+        private readonly IMapper Mapper;
 
-        public CartController(AppDbContext context)
+        public CartController(AppDbContext context, IMapper mapper)
         {
             DbContext = context;
+            Mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cart>>> Get()
         {
-            return Ok(await DbContext.Carts.ToListAsync());
+            var carts = await DbContext.Carts.ToListAsync();
+            return Ok(Mapper.Map<List<ECart>, List<Cart>>(carts));
         }
 
         [HttpGet("{id}")]
@@ -32,7 +37,7 @@ namespace DotNet_Sample.Controllers
                 return NotFound();
             }
 
-            return Ok(cart);
+            return Ok(Mapper.Map<ECart, Cart>(cart));
         }
     }
 }

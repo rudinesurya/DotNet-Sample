@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DotNet_Sample.Entity
 {
     [Table("Catagories")]
-    public class Category
+    public class ECategory
     {
         public Guid Id { get; set; }
 

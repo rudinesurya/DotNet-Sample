@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DotNet_Sample.Entity
+﻿namespace DotNet_Sample.Controllers.Dto
 {
-    [Table("Orders")]
     public class Order
     {
         public Guid Id { get; set; }
