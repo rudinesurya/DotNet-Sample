@@ -110,7 +110,8 @@ namespace DotNet_Sample.Controllers
             }
 
             var cart = await DbContext.Carts
-                       .FirstOrDefaultAsync(c => c.Id == cartId);
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.Id == cartId);
 
             if (cart != null)
             {
