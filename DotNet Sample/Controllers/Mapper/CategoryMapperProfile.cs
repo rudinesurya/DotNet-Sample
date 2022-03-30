@@ -9,6 +9,7 @@ namespace DotNet_Sample.Controllers.Mapper
         public CategoryMapperProfile()
         {
             CreateMap<ECategory, Category>();
+            CreateMap<Category, ECategory>();
         }
     }
 }

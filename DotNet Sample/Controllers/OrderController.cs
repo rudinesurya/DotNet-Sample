@@ -28,7 +28,7 @@ namespace DotNet_Sample.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> Get(Guid id)
+        public async Task<ActionResult<Order>> Get([FromRoute] Guid id)
         {
             var order = await DbContext.Orders.FindAsync(id);
 

@@ -28,7 +28,7 @@ namespace DotNet_Sample.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> Get(Guid id)
+        public async Task<ActionResult<Category>> Get([FromRoute] Guid id)
         {
             var category = await DbContext.Categories.FindAsync(id);
 
@@ -38,6 +38,23 @@ namespace DotNet_Sample.Controllers
             }
 
             return Ok(Mapper.Map<ECategory, Category>(category));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Add([FromBody] Category category)
+        {
+            if (category.Id == default)
+                category.Id = Guid.NewGuid();
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var newCategory = await DbContext.Categories.AddAsync(Mapper.Map<Category, ECategory>(category));
+            await DbContext.SaveChangesAsync();
+
+            return CreatedAtAction("Add", new { id = category.Id }, category);
         }
     }
 }

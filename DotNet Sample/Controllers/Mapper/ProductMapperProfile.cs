@@ -9,6 +9,7 @@ namespace DotNet_Sample.Controllers.Mapper
         public ProductMapperProfile()
         {
             CreateMap<EProduct, Product>();
+            CreateMap<Product, EProduct>().ForMember(x => x.Category, options => options.Ignore());
         }
     }
 }

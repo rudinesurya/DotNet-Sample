@@ -21,6 +21,6 @@ namespace DotNet_Sample.Entity
 
         public Guid CategoryId { get; set; }
 
-        public ECategory Category { get; set; }
+        public ECategory? Category { get; set; }
     }
 }

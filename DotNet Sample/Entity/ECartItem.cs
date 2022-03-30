@@ -13,6 +13,6 @@ namespace DotNet_Sample.Entity
 
         public Guid ProductId { get; set; }
 
-        public EProduct Product { get; set; }
+        public EProduct? Product { get; set; }
     }
 }

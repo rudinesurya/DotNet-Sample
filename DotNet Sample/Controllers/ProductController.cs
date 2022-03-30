@@ -23,12 +23,12 @@ namespace DotNet_Sample.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
-            var products = await DbContext.Products.ToListAsync();
+            var products = await DbContext.Products.Include(p => p.Category).ToListAsync();
             return Ok(Mapper.Map<List<EProduct>, List<Product>>(products));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> Get(Guid id)
+        public async Task<ActionResult<Product>> Get([FromRoute] Guid id)
         {
             var product = await DbContext.Products.Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -39,6 +39,23 @@ namespace DotNet_Sample.Controllers
             }
 
             return Ok(Mapper.Map<EProduct, Product>(product));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Add([FromBody] Product product)
+        {
+            if (product.Id == default)
+                product.Id = Guid.NewGuid();
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var newProduct = await DbContext.Products.AddAsync(Mapper.Map<Product, EProduct>(product));
+            await DbContext.SaveChangesAsync();
+
+            return CreatedAtAction("Add", new { id = product.Id }, product);
         }
     }
 }
