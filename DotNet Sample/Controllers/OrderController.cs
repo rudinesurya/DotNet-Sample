@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using DotNet_Sample.Controllers.Dto;
-using DotNet_Sample.Data;
+using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Sample.Controllers
 {
@@ -11,26 +10,26 @@ namespace DotNet_Sample.Controllers
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly AppDbContext DbContext;
+        private readonly IOrderService OrderService;
         private readonly IMapper Mapper;
 
-        public OrderController(AppDbContext context, IMapper mapper)
+        public OrderController(IOrderService orderService, IMapper mapper)
         {
-            DbContext = context;
+            OrderService = orderService;
             Mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> Get()
+        public async Task<IActionResult> Get()
         {
-            var orders = await DbContext.Orders.ToListAsync();
-            return Ok(Mapper.Map<List<EOrder>, List<Order>>(orders));
+            var orders = await OrderService.GetOrdersAsync();
+            return Ok(Mapper.Map<IEnumerable<EOrder>, IEnumerable<Order>>(orders));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> Get([FromRoute] Guid id)
+        public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            var order = await DbContext.Orders.FindAsync(id);
+            var order = await OrderService.GetOrderByIdAsync(id);
 
             if (order == null)
             {

@@ -1,8 +1,10 @@
 ﻿using DotNet_Sample.Entity;
+using System;
+using System.Collections.Generic;
 
-namespace DotNet_Sample.Data
+namespace DotNet_Sample.Test.MockData
 {
-    public class AppDbContextSeed
+    internal class FixedData
     {
         public static IEnumerable<ECategory> GetFixedCategories()
         {
@@ -47,6 +49,20 @@ namespace DotNet_Sample.Data
                     Price = 840.00M,
                     CategoryId = Guid.Parse("c921ef76-0af6-4ac9-a7fd-864b4898d60b")
                 },
+            };
+        }
+
+        public static EProduct GetNewProduct()
+        {
+            return new EProduct()
+            {
+                Id = Guid.Parse("f17d0c63-82fe-417c-afc1-5a8dc51886d1"),
+                Name = "Samsung 20",
+                Summary = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
+                Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
+                ImageFile = "product-2.png",
+                Price = 840.00M,
+                CategoryId = Guid.Parse("c921ef76-0af6-4ac9-a7fd-864b4898d60b")
             };
         }
     }

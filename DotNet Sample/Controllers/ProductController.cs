@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using DotNet_Sample.Controllers.Dto;
-using DotNet_Sample.Data;
+using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Sample.Controllers
 {
@@ -11,27 +10,26 @@ namespace DotNet_Sample.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly AppDbContext DbContext;
+        private readonly IProductService ProductService;
         private readonly IMapper Mapper;
 
-        public ProductController(AppDbContext context, IMapper mapper)
+        public ProductController(IProductService productService, IMapper mapper)
         {
-            DbContext = context;
+            ProductService = productService;
             Mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> Get()
+        public async Task<IActionResult> Get()
         {
-            var products = await DbContext.Products.Include(p => p.Category).ToListAsync();
-            return Ok(Mapper.Map<List<EProduct>, List<Product>>(products));
+            var products = await ProductService.GetProductsAsync();
+            return Ok(Mapper.Map<IEnumerable<EProduct>, IEnumerable<Product>>(products));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> Get([FromRoute] Guid id)
+        public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            var product = await DbContext.Products.Include(p => p.Category)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            var product = await ProductService.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -42,7 +40,7 @@ namespace DotNet_Sample.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Add([FromBody] Product product)
+        public async Task<IActionResult> Add([FromBody] Product product)
         {
             if (product.Id == default)
                 product.Id = Guid.NewGuid();
@@ -52,8 +50,7 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            var newProduct = await DbContext.Products.AddAsync(Mapper.Map<Product, EProduct>(product));
-            await DbContext.SaveChangesAsync();
+            await ProductService.AddAsync(Mapper.Map<Product, EProduct>(product));
 
             return CreatedAtAction("Add", new { id = product.Id }, product);
         }

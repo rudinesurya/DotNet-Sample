@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using DotNet_Sample.Controllers.Dto;
 using DotNet_Sample.Controllers.Dto.Cart_Action;
-using DotNet_Sample.Data;
+using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Sample.Controllers
 {
@@ -12,26 +11,26 @@ namespace DotNet_Sample.Controllers
     [Route("[controller]")]
     public class CartController : ControllerBase
     {
-        private readonly AppDbContext DbContext;
+        private readonly ICartService CartService;
         private readonly IMapper Mapper;
 
-        public CartController(AppDbContext context, IMapper mapper)
+        public CartController(ICartService cartService, IMapper mapper)
         {
-            DbContext = context;
+            CartService = cartService;
             Mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cart>>> Get()
+        public async Task<IActionResult> Get()
         {
-            var carts = await DbContext.Carts.Include(c => c.Items).ToListAsync();
-            return Ok(Mapper.Map<List<ECart>, List<Cart>>(carts));
+            var carts = await CartService.GetCartsAsync();
+            return Ok(Mapper.Map<IEnumerable<ECart>, IEnumerable<Cart>>(carts));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cart>> Get([FromRoute] Guid id)
+        public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            var cart = await DbContext.Carts.Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
+            var cart = await CartService.GetCartByIdAsync(id);
 
             if (cart == null)
             {
@@ -42,83 +41,40 @@ namespace DotNet_Sample.Controllers
         }
 
         [HttpPost("AddItem")]
-        public async Task<ActionResult> AddItem([FromBody] AddCartItem addCartItem)
+        public async Task<IActionResult> AddItem([FromBody] AddCartItem addCartItem)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var cart = await DbContext.Carts
-                .Include(c => c.Items)
-                .ThenInclude(i => i.Product)
-                .FirstOrDefaultAsync(c => c.UserName == addCartItem.UserName);
+            var cart = await CartService.AddItemAsync(addCartItem.UserName, addCartItem.ProductId, addCartItem.Quantity);
 
-            if (cart == null)
-            {
-                cart = new ECart
-                {
-                    UserName = addCartItem.UserName
-                };
-
-                await DbContext.Carts.AddAsync(cart);
-                await DbContext.SaveChangesAsync();
-            }
-
-            cart.Items.Add(new ECartItem
-            {
-                ProductId = addCartItem.ProductId,
-                Quantity = addCartItem.Quantity,
-            });
-
-            DbContext.Entry(cart).State = EntityState.Modified;
-            await DbContext.SaveChangesAsync();
-
-            return CreatedAtAction("AddItem", new { id = cart.Id }, cart);
+            return CreatedAtAction("AddItem", new { id = cart.Id }, addCartItem);
         }
 
         [HttpPost("RemoveItem")]
-        public async Task<ActionResult> RemoveItem([FromBody] RemoveCartItem removeCartItem)
+        public async Task<IActionResult> RemoveItem([FromBody] RemoveCartItem removeCartItem)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var cart = await DbContext.Carts
-                       .Include(c => c.Items)
-                       .FirstOrDefaultAsync(c => c.Id == removeCartItem.CartId);
-
-            if (cart != null)
-            {
-                var removedItem = cart.Items.FirstOrDefault(x => x.Id == removeCartItem.CartItemId);
-                cart.Items.Remove(removedItem);
-
-                DbContext.Entry(cart).State = EntityState.Modified;
-                await DbContext.SaveChangesAsync();
-            }
+            await CartService.RemoveItemAsync(removeCartItem.CartId, removeCartItem.CartItemId);
 
             return NoContent();
         }
 
         [HttpPost("ClearCart")]
-        public async Task<ActionResult> ClearCart([FromBody] Guid cartId)
+        public async Task<IActionResult> ClearCart([FromBody] Guid cartId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var cart = await DbContext.Carts
-                .Include(c => c.Items)
-                .FirstOrDefaultAsync(c => c.Id == cartId);
-
-            if (cart != null)
-            {
-                cart.Items.Clear();
-                DbContext.Entry(cart).State = EntityState.Modified;
-                await DbContext.SaveChangesAsync();
-            }
+            await CartService.ClearCartAsync(cartId);
 
             return NoContent();
         }

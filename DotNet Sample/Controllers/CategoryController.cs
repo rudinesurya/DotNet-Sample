@@ -1,9 +1,8 @@
 using AutoMapper;
 using DotNet_Sample.Controllers.Dto;
-using DotNet_Sample.Data;
+using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Sample.Controllers
 {
@@ -11,26 +10,26 @@ namespace DotNet_Sample.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly AppDbContext DbContext;
+        private readonly ICategoryService CategoryService;
         private readonly IMapper Mapper;
 
-        public CategoryController(AppDbContext context, IMapper mapper)
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
-            DbContext = context;
+            CategoryService = categoryService;
             Mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> Get()
+        public async Task<IActionResult> Get()
         {
-            var categories = await DbContext.Categories.ToListAsync();
-            return Ok(Mapper.Map<List<ECategory>, List<Category>>(categories));
+            var categories = await CategoryService.GetCategoriesAsync();
+            return Ok(Mapper.Map<IEnumerable<ECategory>, IEnumerable<Category>>(categories));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> Get([FromRoute] Guid id)
+        public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            var category = await DbContext.Categories.FindAsync(id);
+            var category = await CategoryService.GetCategoryByIdAsync(id);
 
             if (category == null)
             {
@@ -41,7 +40,7 @@ namespace DotNet_Sample.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Add([FromBody] Category category)
+        public async Task<IActionResult> Add([FromBody] Category category)
         {
             if (category.Id == default)
                 category.Id = Guid.NewGuid();
@@ -51,9 +50,7 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            var newCategory = await DbContext.Categories.AddAsync(Mapper.Map<Category, ECategory>(category));
-            await DbContext.SaveChangesAsync();
-
+            await CategoryService.AddAsync(Mapper.Map<Category, ECategory>(category));
             return CreatedAtAction("Add", new { id = category.Id }, category);
         }
     }

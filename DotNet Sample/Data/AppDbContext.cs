@@ -7,7 +7,6 @@ namespace DotNet_Sample.Data
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            Database.OpenConnection();
             if (Database.EnsureCreated())
             {
                 // Seed Categories
@@ -15,7 +14,7 @@ namespace DotNet_Sample.Data
                 Categories.AddRange(categories);
 
                 // Seed Products
-                Products.AddRange(AppDbContextSeed.GetFixedProducts(categories));
+                Products.AddRange(AppDbContextSeed.GetFixedProducts());
 
                 SaveChangesAsync();
             }
