@@ -14,14 +14,15 @@ namespace DotNet_Sample.Test.ServiceTest
     public class ProductServiceTest : BaseServiceTest
     {
         List<EProduct> seedList;
-        Guid p1Id = Guid.NewGuid();
+        Guid p1Id;
 
         public ProductServiceTest()
         {
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var p1 = FixedData.GetNewEProduct(p1Id, "P1"); 
+                var p1 = FixedData.GetNewEProduct(Guid.NewGuid(), "P1");
+                p1Id = p1.Id;
                 p1.Category = FixedData.GetNewECategory(Guid.NewGuid(), "C1");
                 var p2 = FixedData.GetNewEProduct(Guid.NewGuid(), "P2");
                 p2.Category = FixedData.GetNewECategory(Guid.NewGuid(), "C2");
@@ -66,7 +67,7 @@ namespace DotNet_Sample.Test.ServiceTest
             var sut = new ProductService(DbContext);
 
             /// Act
-            var result = await sut.GetProductByIdAsync();
+            var result = await sut.GetProductByIdAsync(Guid.Empty);
 
             /// Assert
             result.Should().BeNull();
@@ -77,9 +78,11 @@ namespace DotNet_Sample.Test.ServiceTest
         {
             /// Arrange
             var sut = new ProductService(DbContext);
+            var p = FixedData.GetNewEProduct(Guid.NewGuid(), "PN");
+            p.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CN");
 
             /// Act
-            var result = await sut.AddProductAsync(FixedData.GetNewEProduct(Guid.NewGuid()));
+            var result = await sut.AddProductAsync(p);
 
             /// Assert
             result.Should().NotBeNull();

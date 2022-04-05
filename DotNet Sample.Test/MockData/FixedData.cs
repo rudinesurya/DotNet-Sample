@@ -6,9 +6,6 @@ namespace DotNet_Sample.Test.MockData
 {
     public class FixedData
     {
-        /// <summary>
-        /// DTO Fixed Data
-        /// </summary>
         #region DTO
 
         public static Product GetNewProduct(Guid id, string name)
@@ -26,9 +23,6 @@ namespace DotNet_Sample.Test.MockData
 
         #endregion
 
-        /// <summary>
-        /// Entity Fixed Data
-        /// </summary>
         #region Entity
 
         public static ECategory GetNewECategory(Guid id, string name)

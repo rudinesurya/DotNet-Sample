@@ -1,4 +1,3 @@
-using AutoMapper;
 using DotNet_Sample.Controllers;
 using DotNet_Sample.Controllers.Dto;
 using DotNet_Sample.Controllers.Service;
