@@ -50,7 +50,7 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            await ProductService.AddAsync(Mapper.Map<Product, EProduct>(product));
+            await ProductService.AddProductAsync(Mapper.Map<Product, EProduct>(product));
 
             return CreatedAtAction("Add", new { id = product.Id }, product);
         }

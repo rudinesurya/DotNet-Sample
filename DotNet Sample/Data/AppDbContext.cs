@@ -7,17 +7,7 @@ namespace DotNet_Sample.Data
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            if (Database.EnsureCreated())
-            {
-                // Seed Categories
-                var categories = AppDbContextSeed.GetFixedCategories();
-                Categories.AddRange(categories);
-
-                // Seed Products
-                Products.AddRange(AppDbContextSeed.GetFixedProducts());
-
-                SaveChangesAsync();
-            }
+            
         }
 
         public DbSet<EProduct> Products { get; set; }

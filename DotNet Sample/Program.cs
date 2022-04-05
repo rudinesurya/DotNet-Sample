@@ -34,6 +34,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Seed Database
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        AppDbContextSeed.Seed(context);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+}
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -4,7 +4,22 @@ namespace DotNet_Sample.Data
 {
     public class AppDbContextSeed
     {
-        public static IEnumerable<ECategory> GetFixedCategories()
+        public static void Seed(AppDbContext dbContext)
+        {
+            if (dbContext.Database.EnsureCreated())
+            {
+                // Seed Categories
+                var categories = GetFixedECategories();
+                dbContext.Categories.AddRange(categories);
+
+                // Seed Products
+                dbContext.Products.AddRange(GetFixedEProducts());
+
+                dbContext.SaveChangesAsync();
+            }
+        }
+
+        public static IEnumerable<ECategory> GetFixedECategories()
         {
             return new List<ECategory>()
             {
@@ -23,7 +38,7 @@ namespace DotNet_Sample.Data
             };
         }
 
-        public static IEnumerable<EProduct> GetFixedProducts()
+        public static IEnumerable<EProduct> GetFixedEProducts()
         {
             return new List<EProduct>()
             {

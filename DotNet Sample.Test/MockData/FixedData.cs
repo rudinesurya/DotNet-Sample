@@ -1,69 +1,59 @@
-﻿using DotNet_Sample.Entity;
+﻿using DotNet_Sample.Controllers.Dto;
+using DotNet_Sample.Entity;
 using System;
-using System.Collections.Generic;
 
 namespace DotNet_Sample.Test.MockData
 {
-    internal class FixedData
+    public class FixedData
     {
-        public static IEnumerable<ECategory> GetFixedCategories()
+        /// <summary>
+        /// DTO Fixed Data
+        /// </summary>
+        #region DTO
+
+        public static Product GetNewProduct(Guid id, string name)
         {
-            return new List<ECategory>()
+            return new Product()
             {
-                new ECategory()
-                {
-                    Id = Guid.Parse("64a7388c-65e9-42e1-bab1-39cd105f8675"),
-                    Name = "White",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat.",
-                },
-                new ECategory()
-                {
-                    Id = Guid.Parse("c921ef76-0af6-4ac9-a7fd-864b4898d60b"),
-                    Name = "Black",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat.",
-                },
+                Id = id,
+                Name = name,
+                Summary = "Summary",
+                Description = "Description",
+                ImageFile = "default.png",
+                Price = 1000.00M,
             };
         }
 
-        public static IEnumerable<EProduct> GetFixedProducts()
+        #endregion
+
+        /// <summary>
+        /// Entity Fixed Data
+        /// </summary>
+        #region Entity
+
+        public static ECategory GetNewECategory(Guid id, string name)
         {
-            return new List<EProduct>()
+            return new ECategory()
             {
-                new EProduct()
-                {
-                    Id = Guid.Parse("2cff423d-0852-4406-ac3a-32a39a0253c0"),
-                    Name = "IPhone X",
-                    Summary = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
-                    ImageFile = "product-1.png",
-                    Price = 950.00M,
-                    CategoryId = Guid.Parse("64a7388c-65e9-42e1-bab1-39cd105f8675")
-                },
-                new EProduct()
-                {
-                    Id = Guid.Parse("c8e86dc0-17ab-4b0e-8205-1c29afe50c09"),
-                    Name = "Samsung 10",
-                    Summary = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
-                    ImageFile = "product-2.png",
-                    Price = 840.00M,
-                    CategoryId = Guid.Parse("c921ef76-0af6-4ac9-a7fd-864b4898d60b")
-                },
+                Id = id,
+                Name = name,
+                Description = "",
             };
         }
 
-        public static EProduct GetNewProduct()
+        public static EProduct GetNewEProduct(Guid id, string name)
         {
             return new EProduct()
             {
-                Id = Guid.Parse("f17d0c63-82fe-417c-afc1-5a8dc51886d1"),
-                Name = "Samsung 20",
-                Summary = "This phone is the company's biggest change to its flagship smartphone in years. It includes a borderless.",
-                Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
-                ImageFile = "product-2.png",
-                Price = 840.00M,
-                CategoryId = Guid.Parse("c921ef76-0af6-4ac9-a7fd-864b4898d60b")
+                Id = id,
+                Name = name,
+                Summary = "Summary",
+                Description = "Description",
+                ImageFile = "default.png",
+                Price = 1000.00M,
             };
         }
+
+        #endregion
     }
 }

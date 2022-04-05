@@ -10,7 +10,7 @@ namespace DotNet_Sample.Controllers.Service
 
         Task<EProduct> GetProductByIdAsync(Guid id);
 
-        Task<EProduct> AddAsync(EProduct product);
+        Task<EProduct> AddProductAsync(EProduct product);
     }
 
     public class ProductService : IProductService
@@ -32,7 +32,7 @@ namespace DotNet_Sample.Controllers.Service
             return await DbContext.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<EProduct> AddAsync(EProduct product)
+        public async Task<EProduct> AddProductAsync(EProduct product)
         {
             await DbContext.Products.AddAsync(product);
             await DbContext.SaveChangesAsync();
