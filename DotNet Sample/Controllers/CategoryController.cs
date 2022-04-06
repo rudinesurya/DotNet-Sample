@@ -50,7 +50,7 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            await CategoryService.AddAsync(Mapper.Map<Category, ECategory>(category));
+            await CategoryService.AddCategoryAsync(Mapper.Map<Category, ECategory>(category));
             return CreatedAtAction("Add", new { id = category.Id }, category);
         }
     }

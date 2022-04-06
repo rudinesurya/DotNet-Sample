@@ -6,7 +6,7 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface ICategoryService
     {
-        Task<ECategory> AddAsync(ECategory category);
+        Task<ECategory> AddCategoryAsync(ECategory category);
 
         Task<IEnumerable<ECategory>> GetCategoriesAsync();
 
@@ -32,7 +32,7 @@ namespace DotNet_Sample.Controllers.Service
             return await DbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<ECategory> AddAsync(ECategory category)
+        public async Task<ECategory> AddCategoryAsync(ECategory category)
         {
             await DbContext.Categories.AddAsync(category);
             await DbContext.SaveChangesAsync();
