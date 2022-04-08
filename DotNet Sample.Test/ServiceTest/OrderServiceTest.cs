@@ -46,6 +46,19 @@ namespace DotNet_Sample.Test.ServiceTest
         }
 
         [Fact]
+        public async Task GetOrdersByUserNameAsync_ReturnCollection()
+        {
+            /// Arrange
+            var sut = new OrderService(DbContext);
+
+            /// Act
+            var result = await sut.GetOrdersByUserNameAsync("U1");
+
+            /// Assert
+            result.Should().HaveCount(seedList.Where(o => o.UserName == "U1").Count());
+        }
+
+        [Fact]
         public async Task GetOrderByIdAsync_ReturnFound()
         {
             /// Arrange

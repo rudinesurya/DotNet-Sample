@@ -8,6 +8,8 @@ namespace DotNet_Sample.Controllers.Service
     {
         Task<EOrder> GetOrderByIdAsync(Guid id);
 
+        Task<IEnumerable<EOrder>> GetOrdersByUserNameAsync(string userName);
+
         Task<IEnumerable<EOrder>> GetOrdersAsync();
     }
 
@@ -23,6 +25,11 @@ namespace DotNet_Sample.Controllers.Service
         public async Task<IEnumerable<EOrder>> GetOrdersAsync()
         {
             return await DbContext.Orders.ToListAsync();
+        }
+
+        public async Task<IEnumerable<EOrder>> GetOrdersByUserNameAsync(string userName)
+        {
+            return await DbContext.Orders.Where(o => o.UserName == userName).ToListAsync();
         }
 
         public async Task<EOrder> GetOrderByIdAsync(Guid id)

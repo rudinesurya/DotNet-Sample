@@ -15,6 +15,7 @@ namespace DotNet_Sample.Test.ServiceTest
     {
         List<ECart> seedList;
         Guid c1Id;
+        ECart c2; 
 
         public CartServiceTest()
         {
@@ -23,7 +24,9 @@ namespace DotNet_Sample.Test.ServiceTest
                 // Seed Products
                 var c1 = FixedData.GetNewECart(Guid.NewGuid(), "U1");
                 c1Id = c1.Id;
-                var c2 = FixedData.GetNewECart(Guid.NewGuid(), "U2");
+
+                c2 = FixedData.GetNewECart(Guid.NewGuid(), "U2");
+                c2.Items = new List<ECartItem> { FixedData.GetNewECartItem(Guid.NewGuid(), Guid.NewGuid()) };
 
                 seedList = new List<ECart>() { c1, c2 };
 
@@ -69,6 +72,76 @@ namespace DotNet_Sample.Test.ServiceTest
 
             /// Assert
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task AddItemAsync_ReturnSuccess()
+        {
+            /// Arrange
+            var sut = new CartService(DbContext);
+
+            /// Act
+            var result = await sut.AddItemAsync("U1", Guid.NewGuid(), 1);
+
+            /// Assert
+            result.Should().NotBeNull();
+            result.Items.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async Task AddItemAsyncWithNewUser_ReturnSuccess()
+        {
+            /// Arrange
+            var sut = new CartService(DbContext);
+
+            /// Act
+            var result = await sut.AddItemAsync("U", Guid.NewGuid(), 1);
+
+            /// Assert
+            result.Should().NotBeNull();
+            result.Items.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async Task AddItemAsyncToAppendToCurrentCart_ReturnSuccess()
+        {
+            /// Arrange
+            var sut = new CartService(DbContext);
+
+            /// Act
+            var result = await sut.AddItemAsync("U2", Guid.NewGuid(), 1);
+
+            /// Assert
+            result.Should().NotBeNull();
+            result.Items.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task RemoveItemAsync_ReturnSuccess()
+        {
+            /// Arrange
+            var sut = new CartService(DbContext);
+
+            /// Act
+            var result = await sut.RemoveItemAsync(c2.Id, c2.Items.First().Id);
+
+            /// Assert
+            result.Should().NotBeNull();
+            result.Items.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public async Task ClearCartAsync_ReturnSuccess()
+        {
+            /// Arrange
+            var sut = new CartService(DbContext);
+
+            /// Act
+            var result = await sut.ClearCartAsync(c2.Id);
+
+            /// Assert
+            result.Should().NotBeNull();
+            result.Items.Should().HaveCount(0);
         }
     }
 }

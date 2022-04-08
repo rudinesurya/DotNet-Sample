@@ -26,6 +26,13 @@ namespace DotNet_Sample.Controllers
             return Ok(Mapper.Map<IEnumerable<EOrder>, IEnumerable<Order>>(orders));
         }
 
+        [HttpGet("{userName}")]
+        public async Task<IActionResult> Get([FromRoute] string userName)
+        {
+            var orders = await OrderService.GetOrdersByUserNameAsync(userName);
+            return Ok(Mapper.Map<IEnumerable<EOrder>, IEnumerable<Order>>(orders));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {

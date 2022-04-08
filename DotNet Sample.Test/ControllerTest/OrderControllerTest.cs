@@ -35,6 +35,24 @@ namespace DotNet_Sample.Test.ControllerTest
         }
 
         [Fact]
+        public async Task GetOrdersByUserNameAsync_ReturnCollection()
+        {
+            /// Arrange
+            var service = new Mock<IOrderService>();
+            var orderList = new List<EOrder>() { FixedData.GetNewEOrder(Guid.NewGuid(), "U1"), FixedData.GetNewEOrder(Guid.NewGuid(), "U2") };
+            var u1OrderList = orderList.Where(o => o.UserName == "U1");
+            service.Setup(_ => _.GetOrdersByUserNameAsync("U1")).ReturnsAsync(u1OrderList);
+            var sut = new OrderController(service.Object, Mapper);
+
+            /// Act
+            var result = await sut.Get("U1") as OkObjectResult;
+
+            /// Assert
+            result.StatusCode.Should().Be(200);
+            (result.Value as List<Order>).Count.Should().Be(u1OrderList.Count());
+        }
+
+        [Fact]
         public async Task GetOrdersAsync_ReturnEmptyCollection()
         {
             /// Arrange
