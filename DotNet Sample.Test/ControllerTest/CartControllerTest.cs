@@ -21,10 +21,11 @@ namespace DotNet_Sample.Test.ControllerTest
         public async Task GetCartsAsync_ReturnCollection()
         {
             /// Arrange
-            var service = new Mock<ICartService>();
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
             var cartList = new List<ECart>() { FixedData.GetNewECart(Guid.NewGuid(), "C1"), FixedData.GetNewECart(Guid.NewGuid(), "C2") };
-            service.Setup(_ => _.GetCartsAsync()).ReturnsAsync(cartList);
-            var sut = new CartController(service.Object, Mapper);
+            cartService.Setup(_ => _.GetCartsAsync()).ReturnsAsync(cartList);
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
 
             /// Act
             var result = await sut.Get() as OkObjectResult;
@@ -38,9 +39,10 @@ namespace DotNet_Sample.Test.ControllerTest
         public async Task GetOrdersAsync_ReturnEmptyCollection()
         {
             /// Arrange
-            var service = new Mock<ICartService>();
-            service.Setup(_ => _.GetCartsAsync()).ReturnsAsync(new List<ECart>());
-            var sut = new CartController(service.Object, Mapper);
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
+            cartService.Setup(_ => _.GetCartsAsync()).ReturnsAsync(new List<ECart>());
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
 
             /// Act
             var result = await sut.Get() as OkObjectResult;
@@ -54,10 +56,11 @@ namespace DotNet_Sample.Test.ControllerTest
         public async Task GetOrderByIdAsync_ReturnFound()
         {
             /// Arrange
-            var service = new Mock<ICartService>();
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
             var cartId = Guid.NewGuid();
-            service.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
-            var sut = new CartController(service.Object, Mapper);
+            cartService.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
 
             /// Act
             var result = await sut.Get(cartId) as OkObjectResult;
@@ -70,10 +73,11 @@ namespace DotNet_Sample.Test.ControllerTest
         public async Task GetOrderByIdAsync_ReturnNotFound()
         {
             /// Arrange
-            var service = new Mock<ICartService>();
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
             var invalidId = Guid.NewGuid();
-            service.Setup(_ => _.GetCartByIdAsync(invalidId)).ReturnsAsync(default(ECart));
-            var sut = new CartController(service.Object, Mapper);
+            cartService.Setup(_ => _.GetCartByIdAsync(invalidId)).ReturnsAsync(default(ECart));
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
 
             /// Act
             var result = await sut.Get(invalidId) as NotFoundResult;
@@ -86,14 +90,15 @@ namespace DotNet_Sample.Test.ControllerTest
         public async Task AddItemAsync_ReturnSuccess()
         {
             /// Arrange
-            var service = new Mock<ICartService>();
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
 
             var productId = Guid.NewGuid();
             var cart = FixedData.GetNewECart(Guid.NewGuid(), "U");
             cart.Items = new List<ECartItem> { FixedData.GetNewECartItem(Guid.NewGuid(), productId) };
             
-            service.Setup(_ => _.AddItemAsync("U", productId, 1)).ReturnsAsync(cart);
-            var sut = new CartController(service.Object, Mapper);
+            cartService.Setup(_ => _.AddItemAsync("U", productId, 1)).ReturnsAsync(cart);
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
 
             /// Act
             var result = await sut.AddItem(FixedData.GetNewAddCartItemAction("U", productId)) as CreatedAtActionResult;
@@ -105,13 +110,14 @@ namespace DotNet_Sample.Test.ControllerTest
         public async Task RemoveItemAsync_ReturnSuccess()
         {
             /// Arrange
-            var service = new Mock<ICartService>();
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
 
             var cartId = Guid.NewGuid();
             var cartItemId = Guid.NewGuid();
 
-            service.Setup(_ => _.RemoveItemAsync(cartId, cartItemId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
-            var sut = new CartController(service.Object, Mapper);
+            cartService.Setup(_ => _.RemoveItemAsync(cartId, cartItemId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
 
             /// Act
             var result = await sut.RemoveItem(FixedData.GetNewRemoveCartItemAction(cartId, cartItemId)) as NoContentResult;
@@ -123,18 +129,61 @@ namespace DotNet_Sample.Test.ControllerTest
         public async Task ClearCartAsync_ReturnSuccess()
         {
             /// Arrange
-            var service = new Mock<ICartService>();
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
 
             var cartId = Guid.NewGuid();
 
-            service.Setup(_ => _.ClearCartAsync(cartId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
-            var sut = new CartController(service.Object, Mapper);
+            cartService.Setup(_ => _.ClearCartAsync(cartId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
 
             /// Act
             var result = await sut.ClearCart(cartId) as NoContentResult;
 
             /// Assert
             result.StatusCode.Should().Be(204);
+        }
+
+        public async Task CheckoutCartAsync_ReturnSuccess()
+        {
+            /// Arrange
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
+
+            var cartId = Guid.NewGuid();
+            var order = FixedData.GetNewEOrder(Guid.NewGuid(), "U");
+
+            cartService.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
+            orderService.Setup(_ => _.GetOrderByCartIdAsync(cartId)).ReturnsAsync(order);
+            orderService.Setup(_ => _.AddOrderAsync(order)).ReturnsAsync(order);
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
+
+            /// Act
+            var result = await sut.CheckoutCart(cartId) as CreatedAtActionResult;
+
+            /// Assert
+            result.StatusCode.Should().Be(201);
+        }
+
+        public async Task CheckoutCartAsync_NewOrderReturnSuccess()
+        {
+            /// Arrange
+            var cartService = new Mock<ICartService>();
+            var orderService = new Mock<IOrderService>();
+
+            var cartId = Guid.NewGuid();
+            var order = FixedData.GetNewEOrder(Guid.NewGuid(), "U");
+
+            cartService.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewECart(cartId, "C1"));
+            orderService.Setup(_ => _.GetOrderByCartIdAsync(cartId)).ReturnsAsync((EOrder)default);
+            orderService.Setup(_ => _.AddOrderAsync(order)).ReturnsAsync(order);
+            var sut = new CartController(cartService.Object, orderService.Object, Mapper);
+
+            /// Act
+            var result = await sut.CheckoutCart(cartId) as CreatedAtActionResult;
+
+            /// Assert
+            result.StatusCode.Should().Be(201);
         }
     }
 }

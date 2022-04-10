@@ -3,6 +3,7 @@ using DotNet_Sample.Entity;
 using DotNet_Sample.Test.Helper;
 using DotNet_Sample.Test.MockData;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace DotNet_Sample.Test.ServiceTest
     {
         List<EOrder> seedList;
         Guid o1Id;
+        Guid o2CartId;
 
         public OrderServiceTest()
         {
@@ -24,6 +26,8 @@ namespace DotNet_Sample.Test.ServiceTest
                 var o1 = FixedData.GetNewEOrder(Guid.NewGuid(), "U1");
                 o1Id = o1.Id;
                 var o2 = FixedData.GetNewEOrder(Guid.NewGuid(), "U2");
+                o2CartId = Guid.NewGuid();
+                o2.CartId = o2CartId;
 
                 seedList = new List<EOrder>() { o1, o2 };
 
@@ -82,6 +86,33 @@ namespace DotNet_Sample.Test.ServiceTest
 
             /// Assert
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetOrderByCartIdAsync_ReturnFound()
+        {
+            /// Arrange
+            var sut = new OrderService(DbContext);
+            
+            /// Act
+            var result = await sut.GetOrderByCartIdAsync(o2CartId);
+
+            /// Assert
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task AddOrderAsync_ReturnSuccess()
+        {
+            /// Arrange
+            var sut = new OrderService(DbContext);
+            var o = FixedData.GetNewEOrder(Guid.NewGuid(), "U");
+
+            /// Act
+            var result = await sut.AddOrderAsync(o);
+
+            /// Assert
+            result.Should().NotBeNull();
         }
     }
 }

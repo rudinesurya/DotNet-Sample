@@ -12,11 +12,13 @@ namespace DotNet_Sample.Controllers
     public class CartController : ControllerBase
     {
         private readonly ICartService CartService;
+        private readonly IOrderService OrderService;
         private readonly IMapper Mapper;
 
-        public CartController(ICartService cartService, IMapper mapper)
+        public CartController(ICartService cartService, IOrderService orderService, IMapper mapper)
         {
             CartService = cartService;
+            OrderService = orderService;
             Mapper = mapper;
         }
 
@@ -77,6 +79,43 @@ namespace DotNet_Sample.Controllers
             await CartService.ClearCartAsync(cartId);
 
             return NoContent();
+        }
+
+        [HttpPost("Checkout")]
+        public async Task<IActionResult> CheckoutCart([FromBody] Guid cartId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var order = await OrderService.GetOrderByCartIdAsync(cartId);
+            if (order == null)
+            {
+                var cart = await CartService.GetCartByIdAsync(cartId);
+
+                var newOrder = new EOrder() {
+                    Id = Guid.NewGuid(),
+                    CartId = cartId,
+                    UserName = cart.UserName,
+                    TotalPrice = cart.TotalPrice,
+                    FirstName = "",
+                    LastName = "",
+                    EmailAddress = "",
+                    AddressLine = "",
+                    Country = "",
+                    State = "",
+                    ZipCode = "",
+                    CardName = "",
+                    CardNumber = "",
+                    Expiration = "",
+                    CVV = "",
+                    PaymentMethod = Entity.PaymentMethod.Paypal,
+                };
+                order = await OrderService.AddOrderAsync(newOrder);
+            }
+
+            return CreatedAtAction("CheckoutCart", new { id = order.Id }, order);
         }
     }
 }
