@@ -21,11 +21,11 @@ namespace DotNet_Sample.Test.ServiceTest
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var p1 = FixedData.GetNewEProduct(Guid.NewGuid(), "P1");
+                var p1 = FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_1");
                 p1Id = p1.Id;
-                p1.Category = FixedData.GetNewECategory(Guid.NewGuid(), "C1");
-                var p2 = FixedData.GetNewEProduct(Guid.NewGuid(), "P2");
-                p2.Category = FixedData.GetNewECategory(Guid.NewGuid(), "C2");
+                p1.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_1");
+                var p2 = FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_2");
+                p2.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_2");
 
                 seedList = new List<EProduct>() { p1, p2 };
 
@@ -78,8 +78,8 @@ namespace DotNet_Sample.Test.ServiceTest
         {
             /// Arrange
             var sut = new ProductService(DbContext);
-            var p = FixedData.GetNewEProduct(Guid.NewGuid(), "PN");
-            p.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CN");
+            var p = FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_NEW");
+            p.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_NEW");
 
             /// Act
             var result = await sut.AddProductAsync(p);

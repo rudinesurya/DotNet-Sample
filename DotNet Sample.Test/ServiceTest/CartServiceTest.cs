@@ -22,10 +22,10 @@ namespace DotNet_Sample.Test.ServiceTest
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var c1 = FixedData.GetNewECart(Guid.NewGuid(), "U1");
+                var c1 = FixedData.GetNewECart(Guid.NewGuid(), "USER_1");
                 c1Id = c1.Id;
 
-                c2 = FixedData.GetNewECart(Guid.NewGuid(), "U2");
+                c2 = FixedData.GetNewECart(Guid.NewGuid(), "USER_2");
                 c2.Items = new List<ECartItem> { FixedData.GetNewECartItem(Guid.NewGuid(), Guid.NewGuid()) };
 
                 seedList = new List<ECart>() { c1, c2 };
@@ -81,7 +81,7 @@ namespace DotNet_Sample.Test.ServiceTest
             var sut = new CartService(DbContext);
 
             /// Act
-            var result = await sut.AddItemAsync("U1", Guid.NewGuid(), 1);
+            var result = await sut.AddItemAsync("USER_1", Guid.NewGuid(), 1);
 
             /// Assert
             result.Should().NotBeNull();
@@ -95,7 +95,7 @@ namespace DotNet_Sample.Test.ServiceTest
             var sut = new CartService(DbContext);
 
             /// Act
-            var result = await sut.AddItemAsync("U", Guid.NewGuid(), 1);
+            var result = await sut.AddItemAsync("USER_NEW", Guid.NewGuid(), 1);
 
             /// Assert
             result.Should().NotBeNull();
@@ -109,7 +109,7 @@ namespace DotNet_Sample.Test.ServiceTest
             var sut = new CartService(DbContext);
 
             /// Act
-            var result = await sut.AddItemAsync("U2", Guid.NewGuid(), 1);
+            var result = await sut.AddItemAsync("USER_2", Guid.NewGuid(), 1);
 
             /// Assert
             result.Should().NotBeNull();

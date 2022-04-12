@@ -22,7 +22,7 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IProductService>();
-            var productList = new List<EProduct>() { FixedData.GetNewEProduct(Guid.NewGuid(), "P1"), FixedData.GetNewEProduct(Guid.NewGuid(), "P2") };
+            var productList = new List<EProduct>() { FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_1"), FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_2") };
             service.Setup(_ => _.GetProductsAsync()).ReturnsAsync(productList);
             var sut = new ProductController(service.Object, Mapper);
 
@@ -56,7 +56,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IProductService>();
             var productId = Guid.NewGuid();
-            service.Setup(_ => _.GetProductByIdAsync(productId)).ReturnsAsync(FixedData.GetNewEProduct(productId, "P1"));
+            service.Setup(_ => _.GetProductByIdAsync(productId)).ReturnsAsync(FixedData.GetNewEProduct(productId, "PRODUCT_1"));
             var sut = new ProductController(service.Object, Mapper);
 
             /// Act
@@ -88,11 +88,11 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IProductService>();
             var newProductId = Guid.NewGuid();
-            service.Setup(_ => _.AddProductAsync(FixedData.GetNewEProduct(newProductId, "PN"))).ReturnsAsync(FixedData.GetNewEProduct(newProductId, "PN"));
+            service.Setup(_ => _.AddProductAsync(FixedData.GetNewEProduct(newProductId, "PRODUCT_NEW"))).ReturnsAsync(FixedData.GetNewEProduct(newProductId, "PRODUCT_NEW"));
             var sut = new ProductController(service.Object, Mapper);
 
             /// Act
-            var result = await sut.Add(FixedData.GetNewProduct(newProductId, "PN")) as CreatedAtActionResult;
+            var result = await sut.Add(FixedData.GetNewProduct(newProductId, "PRODUCT_NEW")) as CreatedAtActionResult;
 
             /// Assert
             result.StatusCode.Should().Be(201);

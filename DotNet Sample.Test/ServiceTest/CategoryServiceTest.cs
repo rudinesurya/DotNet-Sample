@@ -21,9 +21,9 @@ namespace DotNet_Sample.Test.ServiceTest
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var c1 = FixedData.GetNewECategory(Guid.NewGuid(), "C1");
+                var c1 = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_1");
                 c1Id = c1.Id;
-                var c2 = FixedData.GetNewECategory(Guid.NewGuid(), "C2");
+                var c2 = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_2");
 
                 seedList = new List<ECategory>() { c1, c2 };
 
@@ -76,7 +76,7 @@ namespace DotNet_Sample.Test.ServiceTest
         {
             /// Arrange
             var sut = new CategoryService(DbContext);
-            var c = FixedData.GetNewECategory(Guid.NewGuid(), "CN");
+            var c = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_NEW");
 
             /// Act
             var result = await sut.AddCategoryAsync(c);

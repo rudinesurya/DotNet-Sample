@@ -22,7 +22,7 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IOrderService>();
-            var orderList = new List<EOrder>() { FixedData.GetNewEOrder(Guid.NewGuid(), "U1"), FixedData.GetNewEOrder(Guid.NewGuid(), "U2") };
+            var orderList = new List<EOrder>() { FixedData.GetNewEOrder(Guid.NewGuid(), "USER_1"), FixedData.GetNewEOrder(Guid.NewGuid(), "USER_2") };
             service.Setup(_ => _.GetOrdersAsync()).ReturnsAsync(orderList);
             var sut = new OrderController(service.Object, Mapper);
 
@@ -39,13 +39,13 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IOrderService>();
-            var orderList = new List<EOrder>() { FixedData.GetNewEOrder(Guid.NewGuid(), "U1"), FixedData.GetNewEOrder(Guid.NewGuid(), "U2") };
-            var u1OrderList = orderList.Where(o => o.UserName == "U1");
-            service.Setup(_ => _.GetOrdersByUserNameAsync("U1")).ReturnsAsync(u1OrderList);
+            var orderList = new List<EOrder>() { FixedData.GetNewEOrder(Guid.NewGuid(), "USER_1"), FixedData.GetNewEOrder(Guid.NewGuid(), "USER_2") };
+            var u1OrderList = orderList.Where(o => o.UserName == "USER_1");
+            service.Setup(_ => _.GetOrdersByUserNameAsync("USER_1")).ReturnsAsync(u1OrderList);
             var sut = new OrderController(service.Object, Mapper);
 
             /// Act
-            var result = await sut.Get("U1") as OkObjectResult;
+            var result = await sut.Get("USER_1") as OkObjectResult;
 
             /// Assert
             result.StatusCode.Should().Be(200);
@@ -74,7 +74,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IOrderService>();
             var orderId = Guid.NewGuid();
-            service.Setup(_ => _.GetOrderByIdAsync(orderId)).ReturnsAsync(FixedData.GetNewEOrder(orderId, "U1"));
+            service.Setup(_ => _.GetOrderByIdAsync(orderId)).ReturnsAsync(FixedData.GetNewEOrder(orderId, "USER_1"));
             var sut = new OrderController(service.Object, Mapper);
 
             /// Act

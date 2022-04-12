@@ -23,9 +23,9 @@ namespace DotNet_Sample.Test.ServiceTest
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var o1 = FixedData.GetNewEOrder(Guid.NewGuid(), "U1");
+                var o1 = FixedData.GetNewEOrder(Guid.NewGuid(), "USER_1");
                 o1Id = o1.Id;
-                var o2 = FixedData.GetNewEOrder(Guid.NewGuid(), "U2");
+                var o2 = FixedData.GetNewEOrder(Guid.NewGuid(), "USER_2");
                 o2CartId = Guid.NewGuid();
                 o2.CartId = o2CartId;
 
@@ -56,10 +56,10 @@ namespace DotNet_Sample.Test.ServiceTest
             var sut = new OrderService(DbContext);
 
             /// Act
-            var result = await sut.GetOrdersByUserNameAsync("U1");
+            var result = await sut.GetOrdersByUserNameAsync("USER_1");
 
             /// Assert
-            result.Should().HaveCount(seedList.Where(o => o.UserName == "U1").Count());
+            result.Should().HaveCount(seedList.Where(o => o.UserName == "USER_1").Count());
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace DotNet_Sample.Test.ServiceTest
         {
             /// Arrange
             var sut = new OrderService(DbContext);
-            var o = FixedData.GetNewEOrder(Guid.NewGuid(), "U");
+            var o = FixedData.GetNewEOrder(Guid.NewGuid(), "USER_1");
 
             /// Act
             var result = await sut.AddOrderAsync(o);

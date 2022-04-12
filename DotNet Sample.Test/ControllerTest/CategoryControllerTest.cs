@@ -22,7 +22,7 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<ICategoryService>();
-            var categoryList = new List<ECategory>() { FixedData.GetNewECategory(Guid.NewGuid(), "C1"), FixedData.GetNewECategory(Guid.NewGuid(), "C2") };
+            var categoryList = new List<ECategory>() { FixedData.GetNewECategory(Guid.NewGuid(), "CAT_1"), FixedData.GetNewECategory(Guid.NewGuid(), "CAT_2") };
             service.Setup(_ => _.GetCategoriesAsync()).ReturnsAsync(categoryList);
             var sut = new CategoryController(service.Object, Mapper);
 
@@ -56,7 +56,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<ICategoryService>();
             var categoryId = Guid.NewGuid();
-            service.Setup(_ => _.GetCategoryByIdAsync(categoryId)).ReturnsAsync(FixedData.GetNewECategory(categoryId, "C1"));
+            service.Setup(_ => _.GetCategoryByIdAsync(categoryId)).ReturnsAsync(FixedData.GetNewECategory(categoryId, "CAT_1"));
             var sut = new CategoryController(service.Object, Mapper);
 
             /// Act
@@ -88,11 +88,11 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<ICategoryService>();
             var newCategoryId = Guid.NewGuid();
-            service.Setup(_ => _.AddCategoryAsync(FixedData.GetNewECategory(newCategoryId, "CN"))).ReturnsAsync(FixedData.GetNewECategory(newCategoryId, "CN"));
+            service.Setup(_ => _.AddCategoryAsync(FixedData.GetNewECategory(newCategoryId, "CAT_NEW"))).ReturnsAsync(FixedData.GetNewECategory(newCategoryId, "CAT_NEW"));
             var sut = new CategoryController(service.Object, Mapper);
 
             /// Act
-            var result = await sut.Add(FixedData.GetNewCategory(newCategoryId, "CN")) as CreatedAtActionResult;
+            var result = await sut.Add(FixedData.GetNewCategory(newCategoryId, "CAT_NEW")) as CreatedAtActionResult;
 
             /// Assert
             result.StatusCode.Should().Be(201);
