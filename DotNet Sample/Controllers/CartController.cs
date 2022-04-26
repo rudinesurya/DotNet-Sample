@@ -29,6 +29,19 @@ namespace DotNet_Sample.Controllers
             return Ok(Mapper.Map<IEnumerable<ECart>, IEnumerable<Cart>>(carts));
         }
 
+        [HttpGet("username/{userName}")]
+        public async Task<IActionResult> Get([FromRoute] string userName)
+        {
+            var cart = await CartService.GetCartByUserNameAsync(userName);
+
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Mapper.Map<ECart, Cart>(cart));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {

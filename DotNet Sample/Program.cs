@@ -4,6 +4,7 @@ using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Data;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -35,18 +36,18 @@ if (app.Environment.IsDevelopment())
 }
 
 // Seed Database
-try
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        AppDbContextSeed.Seed(context);
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine(ex);
-}
+//try
+//{
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//        AppDbContextSeed.Seed(context);
+//    }
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex);
+//}
 
 app.UseHttpsRedirection();
 
@@ -55,3 +56,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

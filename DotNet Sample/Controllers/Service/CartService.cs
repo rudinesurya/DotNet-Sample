@@ -12,6 +12,8 @@ namespace DotNet_Sample.Controllers.Service
 
         Task<ECart> GetCartByIdAsync(Guid id);
 
+        Task<ECart> GetCartByUserNameAsync(string userName);
+
         Task<IEnumerable<ECart>> GetCartsAsync();
 
         Task<ECart> RemoveItemAsync(Guid cartId, Guid cartItemId);
@@ -33,7 +35,12 @@ namespace DotNet_Sample.Controllers.Service
 
         public async Task<ECart> GetCartByIdAsync(Guid id)
         {
-            return await DbContext.Carts.Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
+            return await DbContext.Carts.Include(c => c.Items).ThenInclude(i => i.Product).FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<ECart> GetCartByUserNameAsync(string userName)
+        {
+            return await DbContext.Carts.Include(c => c.Items).ThenInclude(i => i.Product).FirstOrDefaultAsync(c => c.UserName == userName);
         }
 
         public async Task<ECart> AddItemAsync(string userName, Guid productId, int quantity)
@@ -54,13 +61,23 @@ namespace DotNet_Sample.Controllers.Service
                 await DbContext.SaveChangesAsync();
             }
 
-            cart.Items.Add(new ECartItem
+            // check for existing product already in cart
+            var sameCartItem = cart.Items.FirstOrDefault(x => x.ProductId == productId);
+            if (sameCartItem != null)
             {
-                ProductId = productId,
-                Quantity = quantity,
-            });
+                sameCartItem.Quantity += quantity;
+                DbContext.Entry(sameCartItem).State = EntityState.Modified;
+            }
+            else
+            {
+                cart.Items.Add(new ECartItem
+                {
+                    ProductId = productId,
+                    Quantity = quantity,
+                });
+                DbContext.Entry(cart).State = EntityState.Modified;
+            }
 
-            DbContext.Entry(cart).State = EntityState.Modified;
             await DbContext.SaveChangesAsync();
 
             return cart;

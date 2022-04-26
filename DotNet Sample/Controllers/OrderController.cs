@@ -26,7 +26,7 @@ namespace DotNet_Sample.Controllers
             return Ok(Mapper.Map<IEnumerable<EOrder>, IEnumerable<Order>>(orders));
         }
 
-        [HttpGet("{userName}")]
+        [HttpGet("username/{userName}")]
         public async Task<IActionResult> Get([FromRoute] string userName)
         {
             var orders = await OrderService.GetOrdersByUserNameAsync(userName);
