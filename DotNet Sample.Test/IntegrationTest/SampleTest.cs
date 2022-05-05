@@ -14,6 +14,15 @@ namespace DotNet_Sample.Test.IntegrationTest
     public class SampleTest : BaseIntegrationTest
     {
         [Fact]
+        public async Task test()
+        {
+            const string baseUrl = "localhost";
+            HttpClient httpClient = new HttpClient();
+            var sampleApiClient = new SampleApiClient.SampleApiClient(baseUrl, httpClient);
+            var result = sampleApiClient.OrderAsync();
+        }
+
+        [Fact]
         public async Task TestForSuccessfullOrderCreation()
         {
             HttpResponseMessage response;

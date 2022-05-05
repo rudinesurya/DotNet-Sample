@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet Sample", "DotNet Sam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet Sample.Test", "DotNet Sample.Test\DotNet Sample.Test.csproj", "{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSwagClientGenerator", "NSwagClientGenerator\NSwagClientGenerator.csproj", "{B3682514-6B51-418C-A2EE-8079A4181872}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClient", "ApiClient\ApiClient.csproj", "{7EF50B5C-2A17-4446-97DA-8A1F787502EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiClient", "ApiClient\ApiClient.csproj", "{7EF50B5C-2A17-4446-97DA-8A1F787502EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3682514-6B51-418C-A2EE-8079A4181872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3682514-6B51-418C-A2EE-8079A4181872}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3682514-6B51-418C-A2EE-8079A4181872}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3682514-6B51-418C-A2EE-8079A4181872}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7EF50B5C-2A17-4446-97DA-8A1F787502EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7EF50B5C-2A17-4446-97DA-8A1F787502EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EF50B5C-2A17-4446-97DA-8A1F787502EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
