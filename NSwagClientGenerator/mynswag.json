@@ -1,0 +1,472 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DotNet Sample",
+    "version": "1.0"
+  },
+  "paths": {
+    "/Cart": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Cart/username/{userName}": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Cart/{id}": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Cart/AddItem": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItem"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItem"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Cart/RemoveItem": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveCartItem"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveCartItem"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveCartItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Cart/ClearCart": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Cart/Checkout": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Category": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Category/{id}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Order": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Order/username/{userName}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Order/{id}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Product": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Product/{id}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddCartItem": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageFile": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RemoveCartItem": {
+        "type": "object",
+        "properties": {
+          "cartId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cartItemId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
