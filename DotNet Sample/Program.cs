@@ -1,5 +1,3 @@
-using AutoMapper;
-using DotNet_Sample.Controllers.Mapper;
 using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Data;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +46,12 @@ if (app.Environment.IsDevelopment())
 //{
 //    Console.WriteLine(ex);
 //}
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.EnsureCreated();
+}
 
 app.UseHttpsRedirection();
 

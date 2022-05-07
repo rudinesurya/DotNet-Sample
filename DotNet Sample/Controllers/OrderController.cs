@@ -19,21 +19,24 @@ namespace DotNet_Sample.Controllers
             Mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetOrders")]
+        [ProducesResponseType(typeof(IList<Order>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             var orders = await OrderService.GetOrdersAsync();
-            return Ok(Mapper.Map<IEnumerable<EOrder>, IEnumerable<Order>>(orders));
+            return Ok(Mapper.Map<IList<EOrder>, IList<Order>>(orders));
         }
 
-        [HttpGet("username/{userName}")]
+        [HttpGet("username/{userName}", Name = "GetOrdersByUserName")]
+        [ProducesResponseType(typeof(IList<Order>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] string userName)
         {
             var orders = await OrderService.GetOrdersByUserNameAsync(userName);
-            return Ok(Mapper.Map<IEnumerable<EOrder>, IEnumerable<Order>>(orders));
+            return Ok(Mapper.Map<IList<EOrder>, IList<Order>>(orders));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetOrderById")]
+        [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             var order = await OrderService.GetOrderByIdAsync(id);

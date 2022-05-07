@@ -40,7 +40,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IOrderService>();
             var orderList = new List<EOrder>() { FixedData.GetNewEOrder(Guid.NewGuid(), "USER_1"), FixedData.GetNewEOrder(Guid.NewGuid(), "USER_2") };
-            var u1OrderList = orderList.Where(o => o.UserName == "USER_1");
+            var u1OrderList = orderList.Where(o => o.UserName == "USER_1").ToList();
             service.Setup(_ => _.GetOrdersByUserNameAsync("USER_1")).ReturnsAsync(u1OrderList);
             var sut = new OrderController(service.Object, Mapper);
 

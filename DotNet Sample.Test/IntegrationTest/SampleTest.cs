@@ -1,11 +1,9 @@
-﻿using DotNet_Sample.Controllers.Dto;
-using DotNet_Sample.Test.Helper;
+﻿using DotNet_Sample.Test.Helper;
 using DotNet_Sample.Test.MockData;
 using FluentAssertions;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,15 +11,6 @@ namespace DotNet_Sample.Test.IntegrationTest
 {
     public class SampleTest : BaseIntegrationTest
     {
-        [Fact]
-        public async Task test()
-        {
-            const string baseUrl = "localhost";
-            HttpClient httpClient = new HttpClient();
-            var sampleApiClient = new SampleApiClient.SampleApiClient(baseUrl, httpClient);
-            var result = sampleApiClient.OrderAsync();
-        }
-
         [Fact]
         public async Task TestForSuccessfullOrderCreation()
         {
@@ -32,19 +21,18 @@ namespace DotNet_Sample.Test.IntegrationTest
             /// Verify that the order gets created under the user name
 
             // Create product
-            var iPhoneX = await (await TestClient.PostAsync("/product",
-                JsonContent.Create(FixedData.GetNewProduct(Guid.NewGuid(), "IPhone X"))
-                )).Content.ReadAsAsync<Product>();
+            var defaultCategory = await TestApiClient.AddCategoryAsync(Mapper.Map<SampleApiClient.Category>(FixedData.GetNewCategory(Guid.NewGuid(), "White")));
+            var iPhoneX = await TestApiClient.AddProductAsync(Mapper.Map<SampleApiClient.Product>(FixedData.GetNewProduct(Guid.NewGuid(), "IPhone X", defaultCategory.Id)));
 
             // Add to cart
-            await TestClient.PostAsync("/cart/additem", JsonContent.Create(FixedData.GetNewAddCartItemAction("Tester", iPhoneX.Id)));
+            await TestApiClient.AddCartItemAsync(Mapper.Map<SampleApiClient.AddCartItem>(FixedData.GetNewAddCartItemAction("Tester", iPhoneX.Id)));
 
             // checkout cart
-            var cart = await (await TestClient.GetAsync("/cart/username/Tester")).Content.ReadAsAsync<Cart>();
-            await TestClient.PostAsync("/cart/checkout", JsonContent.Create(cart.Id));
+            var cart = await TestApiClient.GetCartByUserNameAsync("Tester");
+            await TestApiClient.CheckoutCartAsync(cart.Id);
 
             // Verify that the order gets created under the user name
-            var result = await (await TestClient.GetAsync("/order/username/Tester")).Content.ReadAsAsync<List<Order>>();
+            var result = await TestApiClient.GetOrdersByUserNameAsync("Tester");
             result.Count.Should().Be(1);
         }
 
@@ -59,38 +47,35 @@ namespace DotNet_Sample.Test.IntegrationTest
             /// Verify that the cart contains only one product type with quantity=2
             /// Verify that the order gets created under the user name
 
-
             // Create product
-            var iPhoneX = await (await TestClient.PostAsync("/product",
-                JsonContent.Create(FixedData.GetNewProduct(Guid.NewGuid(), "IPhone X"))
-                )).Content.ReadAsAsync<Product>();
-            var s20 = await (await TestClient.PostAsync("/product",
-                JsonContent.Create(FixedData.GetNewProduct(Guid.NewGuid(), "S20"))
-                )).Content.ReadAsAsync<Product>();
+            var defaultCategory = await TestApiClient.AddCategoryAsync(Mapper.Map<SampleApiClient.Category>(FixedData.GetNewCategory(Guid.NewGuid(), "White")));
+            var iPhoneX = await TestApiClient.AddProductAsync(Mapper.Map<SampleApiClient.Product>(FixedData.GetNewProduct(Guid.NewGuid(), "IPhone X", defaultCategory.Id)));
+            var s20 = await TestApiClient.AddProductAsync(Mapper.Map<SampleApiClient.Product>(FixedData.GetNewProduct(Guid.NewGuid(), "S20", defaultCategory.Id)));
 
             // Add to cart
-            await TestClient.PostAsync("/cart/additem", JsonContent.Create(FixedData.GetNewAddCartItemAction("Tester", iPhoneX.Id)));
-            await TestClient.PostAsync("/cart/additem", JsonContent.Create(FixedData.GetNewAddCartItemAction("Tester", s20.Id)));
+            await TestApiClient.AddCartItemAsync(Mapper.Map<SampleApiClient.AddCartItem>(FixedData.GetNewAddCartItemAction("Tester", iPhoneX.Id)));
+            await TestApiClient.AddCartItemAsync(Mapper.Map<SampleApiClient.AddCartItem>(FixedData.GetNewAddCartItemAction("Tester", s20.Id)));
 
             // Get the cart
-            var cart = await (await TestClient.GetAsync("/cart/username/Tester")).Content.ReadAsAsync<Cart>();
+            var cart = await TestApiClient.GetCartByUserNameAsync("Tester");
 
             // Change of decision. Remove iPhoneX
-            await TestClient.PostAsync("/cart/removeitem", JsonContent.Create(FixedData.GetNewRemoveCartItemAction(cart.Id, cart.Items.Find(x => x.Product.Id == iPhoneX.Id).Id)));
+            await TestApiClient.RemoveCartItemAsync(Mapper.Map<SampleApiClient.RemoveCartItem>(FixedData.GetNewRemoveCartItemAction(cart.Id, cart.Items.ToList().Find(x => x.Product.Id == iPhoneX.Id).Id)));
 
             // Add another s20
-            await TestClient.PostAsync("/cart/additem", JsonContent.Create(FixedData.GetNewAddCartItemAction("Tester", s20.Id)));
+            await TestApiClient.AddCartItemAsync(Mapper.Map<SampleApiClient.AddCartItem>(FixedData.GetNewAddCartItemAction("Tester", s20.Id)));
 
             // Verify that the cart contains only one product type with quantity=2
-            cart = await (await TestClient.GetAsync("/cart/username/Tester")).Content.ReadAsAsync<Cart>();
+            cart = await TestApiClient.GetCartByUserNameAsync("Tester");
             cart.Items.Count.Should().Be(1);
-            cart.Items[0].Quantity.Should().Be(2);
+            cart.Items.ToList()[0].Quantity.Should().Be(2);
 
             // checkout cart
-            await TestClient.PostAsync("/cart/checkout", JsonContent.Create(cart.Id));
+            cart = await TestApiClient.GetCartByUserNameAsync("Tester");
+            await TestApiClient.CheckoutCartAsync(cart.Id);
 
             // Verify that the order gets created under the user name
-            var result = await (await TestClient.GetAsync("/order/username/Tester")).Content.ReadAsAsync<List<Order>>();
+            var result = await TestApiClient.GetOrdersByUserNameAsync("Tester");
             result.Count.Should().Be(1);
         }
     }

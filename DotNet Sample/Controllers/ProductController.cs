@@ -19,14 +19,16 @@ namespace DotNet_Sample.Controllers
             Mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetProducts")]
+        [ProducesResponseType(typeof(IList<Product>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             var products = await ProductService.GetProductsAsync();
-            return Ok(Mapper.Map<IEnumerable<EProduct>, IEnumerable<Product>>(products));
+            return Ok(Mapper.Map<IList<EProduct>, IList<Product>>(products));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetProductById")]
+        [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             var product = await ProductService.GetProductByIdAsync(id);
@@ -39,7 +41,8 @@ namespace DotNet_Sample.Controllers
             return Ok(Mapper.Map<EProduct, Product>(product));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "AddProduct")]
+        [ProducesResponseType(typeof(Product), StatusCodes.Status201Created)]
         public async Task<IActionResult> Add([FromBody] Product product)
         {
             if (product.Id == default)

@@ -10,9 +10,9 @@ namespace DotNet_Sample.Controllers.Service
 
         Task<EOrder> GetOrderByCartIdAsync(Guid cartId);
 
-        Task<IEnumerable<EOrder>> GetOrdersByUserNameAsync(string userName);
+        Task<IList<EOrder>> GetOrdersByUserNameAsync(string userName);
 
-        Task<IEnumerable<EOrder>> GetOrdersAsync();
+        Task<IList<EOrder>> GetOrdersAsync();
 
         Task<EOrder> AddOrderAsync(EOrder order);
     }
@@ -26,12 +26,12 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IEnumerable<EOrder>> GetOrdersAsync()
+        public async Task<IList<EOrder>> GetOrdersAsync()
         {
             return await DbContext.Orders.ToListAsync();
         }
 
-        public async Task<IEnumerable<EOrder>> GetOrdersByUserNameAsync(string userName)
+        public async Task<IList<EOrder>> GetOrdersByUserNameAsync(string userName)
         {
             return await DbContext.Orders.Where(o => o.UserName == userName).ToListAsync();
         }

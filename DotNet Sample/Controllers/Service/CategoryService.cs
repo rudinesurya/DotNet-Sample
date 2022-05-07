@@ -8,7 +8,7 @@ namespace DotNet_Sample.Controllers.Service
     {
         Task<ECategory> AddCategoryAsync(ECategory category);
 
-        Task<IEnumerable<ECategory>> GetCategoriesAsync();
+        Task<IList<ECategory>> GetCategoriesAsync();
 
         Task<ECategory> GetCategoryByIdAsync(Guid id);
     }
@@ -22,7 +22,7 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IEnumerable<ECategory>> GetCategoriesAsync()
+        public async Task<IList<ECategory>> GetCategoriesAsync()
         {
             return await DbContext.Categories.ToListAsync();
         }

@@ -22,14 +22,16 @@ namespace DotNet_Sample.Controllers
             Mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetCarts")]
+        [ProducesResponseType(typeof(IList<Cart>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             var carts = await CartService.GetCartsAsync();
-            return Ok(Mapper.Map<IEnumerable<ECart>, IEnumerable<Cart>>(carts));
+            return Ok(Mapper.Map<IList<ECart>, IList<Cart>>(carts));
         }
 
-        [HttpGet("username/{userName}")]
+        [HttpGet("username/{userName}", Name = "GetCartByUserName")]
+        [ProducesResponseType(typeof(Cart), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] string userName)
         {
             var cart = await CartService.GetCartByUserNameAsync(userName);
@@ -42,7 +44,8 @@ namespace DotNet_Sample.Controllers
             return Ok(Mapper.Map<ECart, Cart>(cart));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetCartById")]
+        [ProducesResponseType(typeof(Cart), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             var cart = await CartService.GetCartByIdAsync(id);
@@ -55,7 +58,8 @@ namespace DotNet_Sample.Controllers
             return Ok(Mapper.Map<ECart, Cart>(cart));
         }
 
-        [HttpPost("AddItem")]
+        [HttpPost("AddItem", Name = "AddCartItem")]
+        [ProducesResponseType(typeof(AddCartItem), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddItem([FromBody] AddCartItem addCartItem)
         {
             if (!ModelState.IsValid)
@@ -68,7 +72,7 @@ namespace DotNet_Sample.Controllers
             return CreatedAtAction("AddItem", new { id = cart.Id }, addCartItem);
         }
 
-        [HttpPost("RemoveItem")]
+        [HttpPost("RemoveItem", Name = "RemoveCartItem")]
         public async Task<IActionResult> RemoveItem([FromBody] RemoveCartItem removeCartItem)
         {
             if (!ModelState.IsValid)
@@ -81,7 +85,7 @@ namespace DotNet_Sample.Controllers
             return NoContent();
         }
 
-        [HttpPost("ClearCart")]
+        [HttpPost("ClearCart", Name = "ClearCart")]
         public async Task<IActionResult> ClearCart([FromBody] Guid cartId)
         {
             if (!ModelState.IsValid)
@@ -94,7 +98,8 @@ namespace DotNet_Sample.Controllers
             return NoContent();
         }
 
-        [HttpPost("Checkout")]
+        [HttpPost("Checkout", Name = "CheckoutCart")]
+        [ProducesResponseType(typeof(Order), StatusCodes.Status201Created)]
         public async Task<IActionResult> CheckoutCart([FromBody] Guid cartId)
         {
             if (!ModelState.IsValid)
@@ -107,7 +112,8 @@ namespace DotNet_Sample.Controllers
             {
                 var cart = await CartService.GetCartByIdAsync(cartId);
 
-                var newOrder = new EOrder() {
+                var newOrder = new EOrder()
+                {
                     Id = Guid.NewGuid(),
                     CartId = cartId,
                     UserName = cart.UserName,

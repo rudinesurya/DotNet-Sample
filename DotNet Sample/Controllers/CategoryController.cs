@@ -19,14 +19,16 @@ namespace DotNet_Sample.Controllers
             Mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetCategories")]
+        [ProducesResponseType(typeof(IList<Category>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             var categories = await CategoryService.GetCategoriesAsync();
-            return Ok(Mapper.Map<IEnumerable<ECategory>, IEnumerable<Category>>(categories));
+            return Ok(Mapper.Map<IList<ECategory>, IList<Category>>(categories));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetCategoryById")]
+        [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             var category = await CategoryService.GetCategoryByIdAsync(id);
@@ -39,7 +41,8 @@ namespace DotNet_Sample.Controllers
             return Ok(Mapper.Map<ECategory, Category>(category));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "AddCategory")]
+        [ProducesResponseType(typeof(Category), StatusCodes.Status201Created)]
         public async Task<IActionResult> Add([FromBody] Category category)
         {
             if (category.Id == default)

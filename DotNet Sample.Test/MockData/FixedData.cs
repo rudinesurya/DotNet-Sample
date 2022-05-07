@@ -19,11 +19,12 @@ namespace DotNet_Sample.Test.MockData
             };
         }
 
-        public static Product GetNewProduct(Guid id, string name)
+        public static Product GetNewProduct(Guid id, string name, Guid categoryId = default)
         {
             return new Product()
             {
                 Id = id,
+                CategoryId = categoryId,
                 Name = name,
                 Summary = "Summary",
                 Description = "Description",

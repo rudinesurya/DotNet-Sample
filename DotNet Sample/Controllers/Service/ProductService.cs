@@ -6,7 +6,7 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface IProductService
     {
-        Task<IEnumerable<EProduct>> GetProductsAsync();
+        Task<IList<EProduct>> GetProductsAsync();
 
         Task<EProduct> GetProductByIdAsync(Guid id);
 
@@ -22,7 +22,7 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IEnumerable<EProduct>> GetProductsAsync()
+        public async Task<IList<EProduct>> GetProductsAsync()
         {
             return await DbContext.Products.Include(p => p.Category).ToListAsync();
         }
