@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiClient\ApiClient.csproj" />
     <ProjectReference Include="..\DotNet Sample\DotNet Sample.csproj" />
   </ItemGroup>
 

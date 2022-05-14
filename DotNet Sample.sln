@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet Sample", "DotNet Sam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet Sample.Test", "DotNet Sample.Test\DotNet Sample.Test.csproj", "{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiClient", "ApiClient\ApiClient.csproj", "{7EF50B5C-2A17-4446-97DA-8A1F787502EA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7EF50B5C-2A17-4446-97DA-8A1F787502EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7EF50B5C-2A17-4446-97DA-8A1F787502EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7EF50B5C-2A17-4446-97DA-8A1F787502EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7EF50B5C-2A17-4446-97DA-8A1F787502EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

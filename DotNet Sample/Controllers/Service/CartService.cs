@@ -40,7 +40,7 @@ namespace DotNet_Sample.Controllers.Service
 
         public async Task<ECart> GetCartByUserNameAsync(string userName)
         {
-            return await DbContext.Carts.Include(c => c.Items).ThenInclude(i => i.Product).ThenInclude(p => p.Category).FirstOrDefaultAsync(c => c.UserName == userName);
+            return await DbContext.Carts.Include(c => c.Items).ThenInclude(i => i.Product).FirstOrDefaultAsync(c => c.UserName == userName);
         }
 
         public async Task<ECart> AddItemAsync(string userName, Guid productId, int quantity)
