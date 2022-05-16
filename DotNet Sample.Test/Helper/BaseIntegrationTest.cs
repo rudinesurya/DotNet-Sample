@@ -6,9 +6,29 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace DotNet_Sample.Test.Helper
 {
+    public static class ExtensionMethods
+    {
+        public static async Task<V?> GetAsync<V>(this HttpClient client, string requestUri)
+        {
+            return await (await client.GetAsync(requestUri)).Content.ReadAsAsync<V>();
+        }
+
+        public static async Task<HttpResponseMessage> PostAsync<T>(this HttpClient client, string requestUri, T payload)
+        {
+            return await client.PostAsync(requestUri, JsonContent.Create(payload));
+        }
+
+        public static async Task<V?> PostAsyncAndReturn<T, V>(this HttpClient client, string requestUri, T payload)
+        {
+            return await (await client.PostAsync(requestUri, JsonContent.Create(payload))).Content.ReadAsAsync<V>();
+        }
+    }
+
     public abstract class BaseIntegrationTest : IDisposable
     {
         protected readonly HttpClient TestClient;
