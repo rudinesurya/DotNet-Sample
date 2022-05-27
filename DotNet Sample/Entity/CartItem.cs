@@ -3,7 +3,7 @@
 namespace DotNet_Sample.Entity
 {
     [Table("Cart_Items")]
-    public class ECartItem
+    public class CartItem
     {
         public Guid Id { get; set; }
 
@@ -13,6 +13,6 @@ namespace DotNet_Sample.Entity
 
         public Guid ProductId { get; set; }
 
-        public EProduct? Product { get; set; }
+        public Product? Product { get; set; }
     }
 }

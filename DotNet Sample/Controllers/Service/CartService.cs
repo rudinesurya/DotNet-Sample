@@ -6,17 +6,15 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface ICartService
     {
-        Task<ECart> AddItemAsync(string userName, Guid productId, int quantity);
+        Task<Cart> AddItemAsync(string userName, Guid productId, int quantity);
 
-        Task<ECart> ClearCartAsync(Guid cartId);
+        Task<Cart> ClearCartAsync(Guid cartId);
 
-        Task<ECart> GetCartByIdAsync(Guid id);
+        Task<Cart> GetCartByIdAsync(Guid id);
 
-        Task<ECart> GetCartByUserNameAsync(string userName);
+        Task<IList<Cart>> GetCartsAsync();
 
-        Task<IList<ECart>> GetCartsAsync();
-
-        Task<ECart> RemoveItemAsync(Guid cartId, Guid cartItemId);
+        Task<Cart> RemoveItemAsync(Guid cartId, Guid cartItemId);
     }
 
     public class CartService : ICartService
@@ -28,22 +26,17 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IList<ECart>> GetCartsAsync()
+        public async Task<IList<Cart>> GetCartsAsync()
         {
-            return await DbContext.Carts.Include(c => c.Items).ToListAsync();
+            return await DbContext.Carts.ToListAsync();
         }
 
-        public async Task<ECart> GetCartByIdAsync(Guid id)
+        public async Task<Cart> GetCartByIdAsync(Guid id)
         {
-            return await DbContext.Carts.Include(c => c.Items).ThenInclude(i => i.Product).FirstOrDefaultAsync(c => c.Id == id);
+            return await DbContext.Carts.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<ECart> GetCartByUserNameAsync(string userName)
-        {
-            return await DbContext.Carts.Include(c => c.Items).ThenInclude(i => i.Product).FirstOrDefaultAsync(c => c.UserName == userName);
-        }
-
-        public async Task<ECart> AddItemAsync(string userName, Guid productId, int quantity)
+        public async Task<Cart> AddItemAsync(string userName, Guid productId, int quantity)
         {
             var cart = await DbContext.Carts
                 .Include(c => c.Items)
@@ -52,7 +45,7 @@ namespace DotNet_Sample.Controllers.Service
 
             if (cart == null)
             {
-                cart = new ECart
+                cart = new Cart
                 {
                     UserName = userName
                 };
@@ -70,7 +63,7 @@ namespace DotNet_Sample.Controllers.Service
             }
             else
             {
-                cart.Items.Add(new ECartItem
+                cart.Items.Add(new CartItem
                 {
                     ProductId = productId,
                     Quantity = quantity,
@@ -83,7 +76,7 @@ namespace DotNet_Sample.Controllers.Service
             return cart;
         }
 
-        public async Task<ECart> RemoveItemAsync(Guid cartId, Guid cartItemId)
+        public async Task<Cart> RemoveItemAsync(Guid cartId, Guid cartItemId)
         {
             var cart = await DbContext.Carts
                        .Include(c => c.Items)
@@ -101,7 +94,7 @@ namespace DotNet_Sample.Controllers.Service
             return cart;
         }
 
-        public async Task<ECart> ClearCartAsync(Guid cartId)
+        public async Task<Cart> ClearCartAsync(Guid cartId)
         {
             var cart = await DbContext.Carts
                 .Include(c => c.Items)

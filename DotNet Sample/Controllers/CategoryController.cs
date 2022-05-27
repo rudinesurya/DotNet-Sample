@@ -1,8 +1,7 @@
-using AutoMapper;
-using DotNet_Sample.Controllers.Dto;
 using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace DotNet_Sample.Controllers
 {
@@ -11,23 +10,23 @@ namespace DotNet_Sample.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService CategoryService;
-        private readonly IMapper Mapper;
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        public CategoryController(ICategoryService categoryService)
         {
             CategoryService = categoryService;
-            Mapper = mapper;
         }
 
         [HttpGet(Name = "GetCategories")]
+        [EnableQuery]
         [ProducesResponseType(typeof(IList<Category>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             var categories = await CategoryService.GetCategoriesAsync();
-            return Ok(Mapper.Map<IList<ECategory>, IList<Category>>(categories));
+            return Ok(categories);
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]
+        [EnableQuery]
         [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
@@ -38,7 +37,7 @@ namespace DotNet_Sample.Controllers
                 return NotFound();
             }
 
-            return Ok(Mapper.Map<ECategory, Category>(category));
+            return Ok(category);
         }
 
         [HttpPost(Name = "AddCategory")]
@@ -53,7 +52,7 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            await CategoryService.AddCategoryAsync(Mapper.Map<Category, ECategory>(category));
+            await CategoryService.AddCategoryAsync(category);
             return CreatedAtAction("Add", new { id = category.Id }, category);
         }
     }

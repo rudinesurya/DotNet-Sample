@@ -6,11 +6,11 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface IProductService
     {
-        Task<IList<EProduct>> GetProductsAsync();
+        Task<IList<Product>> GetProductsAsync();
 
-        Task<EProduct> GetProductByIdAsync(Guid id);
+        Task<Product> GetProductByIdAsync(Guid id);
 
-        Task<EProduct> AddProductAsync(EProduct product);
+        Task<Product> AddProductAsync(Product product);
     }
 
     public class ProductService : IProductService
@@ -22,17 +22,17 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IList<EProduct>> GetProductsAsync()
+        public async Task<IList<Product>> GetProductsAsync()
         {
-            return await DbContext.Products.Include(p => p.Category).ToListAsync();
+            return await DbContext.Products.ToListAsync();
         }
 
-        public async Task<EProduct> GetProductByIdAsync(Guid id)
+        public async Task<Product> GetProductByIdAsync(Guid id)
         {
-            return await DbContext.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+            return await DbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<EProduct> AddProductAsync(EProduct product)
+        public async Task<Product> AddProductAsync(Product product)
         {
             await DbContext.Products.AddAsync(product);
             await DbContext.SaveChangesAsync();

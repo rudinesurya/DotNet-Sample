@@ -3,13 +3,13 @@
 namespace DotNet_Sample.Entity
 {
     [Table("Carts")]
-    public class ECart
+    public class Cart
     {
         public Guid Id { get; set; }
 
         public string UserName { get; set; }
 
-        public List<ECartItem> Items { get; set; } = new List<ECartItem>();
+        public List<CartItem> Items { get; set; } = new List<CartItem>();
 
         public decimal TotalPrice
         {

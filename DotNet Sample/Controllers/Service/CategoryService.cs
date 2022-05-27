@@ -6,11 +6,11 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface ICategoryService
     {
-        Task<ECategory> AddCategoryAsync(ECategory category);
+        Task<Category> AddCategoryAsync(Category category);
 
-        Task<IList<ECategory>> GetCategoriesAsync();
+        Task<IList<Category>> GetCategoriesAsync();
 
-        Task<ECategory> GetCategoryByIdAsync(Guid id);
+        Task<Category> GetCategoryByIdAsync(Guid id);
     }
 
     public class CategoryService : ICategoryService
@@ -22,17 +22,17 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IList<ECategory>> GetCategoriesAsync()
+        public async Task<IList<Category>> GetCategoriesAsync()
         {
             return await DbContext.Categories.ToListAsync();
         }
 
-        public async Task<ECategory> GetCategoryByIdAsync(Guid id)
+        public async Task<Category> GetCategoryByIdAsync(Guid id)
         {
             return await DbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<ECategory> AddCategoryAsync(ECategory category)
+        public async Task<Category> AddCategoryAsync(Category category)
         {
             await DbContext.Categories.AddAsync(category);
             await DbContext.SaveChangesAsync();

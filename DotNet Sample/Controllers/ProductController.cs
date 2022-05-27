@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using DotNet_Sample.Controllers.Dto;
-using DotNet_Sample.Controllers.Service;
+﻿using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace DotNet_Sample.Controllers
 {
@@ -11,23 +10,23 @@ namespace DotNet_Sample.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService ProductService;
-        private readonly IMapper Mapper;
 
-        public ProductController(IProductService productService, IMapper mapper)
+        public ProductController(IProductService productService)
         {
             ProductService = productService;
-            Mapper = mapper;
         }
 
         [HttpGet(Name = "GetProducts")]
+        [EnableQuery]
         [ProducesResponseType(typeof(IList<Product>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             var products = await ProductService.GetProductsAsync();
-            return Ok(Mapper.Map<IList<EProduct>, IList<Product>>(products));
+            return Ok(products);
         }
 
         [HttpGet("{id}", Name = "GetProductById")]
+        [EnableQuery]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
@@ -38,7 +37,7 @@ namespace DotNet_Sample.Controllers
                 return NotFound();
             }
 
-            return Ok(Mapper.Map<EProduct, Product>(product));
+            return Ok(product);
         }
 
         [HttpPost(Name = "AddProduct")]
@@ -53,7 +52,7 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            await ProductService.AddProductAsync(Mapper.Map<Product, EProduct>(product));
+            await ProductService.AddProductAsync(product);
 
             return CreatedAtAction("Add", new { id = product.Id }, product);
         }

@@ -1,11 +1,14 @@
-﻿using DotNet_Sample.Entity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DotNet_Sample.Controllers.Dto
+namespace DotNet_Sample.Entity
 {
+    [Table("Products")]
     public class Product
     {
         public Guid Id { get; set; }
 
+        [Required, StringLength(80)]
         public string Name { get; set; }
 
         public string Summary { get; set; }

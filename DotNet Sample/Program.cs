@@ -1,5 +1,6 @@
 using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Data;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -19,7 +20,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddOData(options => options.Select().Expand().Filter().OrderBy());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

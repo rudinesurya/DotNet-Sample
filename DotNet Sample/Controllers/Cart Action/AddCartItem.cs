@@ -1,4 +1,4 @@
-﻿namespace DotNet_Sample.Controllers.Dto.Cart_Action
+﻿namespace DotNet_Sample.Controllers.Cart_Action
 {
     public class AddCartItem
     {

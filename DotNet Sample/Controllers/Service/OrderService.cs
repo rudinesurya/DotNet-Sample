@@ -6,15 +6,11 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface IOrderService
     {
-        Task<EOrder> GetOrderByIdAsync(Guid id);
+        Task<Order> GetOrderByIdAsync(Guid id);
 
-        Task<EOrder> GetOrderByCartIdAsync(Guid cartId);
+        Task<IList<Order>> GetOrdersAsync();
 
-        Task<IList<EOrder>> GetOrdersByUserNameAsync(string userName);
-
-        Task<IList<EOrder>> GetOrdersAsync();
-
-        Task<EOrder> AddOrderAsync(EOrder order);
+        Task<Order> AddOrderAsync(Order order);
     }
 
     public class OrderService : IOrderService
@@ -26,27 +22,17 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IList<EOrder>> GetOrdersAsync()
+        public async Task<IList<Order>> GetOrdersAsync()
         {
             return await DbContext.Orders.ToListAsync();
         }
 
-        public async Task<IList<EOrder>> GetOrdersByUserNameAsync(string userName)
-        {
-            return await DbContext.Orders.Where(o => o.UserName == userName).ToListAsync();
-        }
-
-        public async Task<EOrder> GetOrderByIdAsync(Guid id)
+        public async Task<Order> GetOrderByIdAsync(Guid id)
         {
             return await DbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public async Task<EOrder> GetOrderByCartIdAsync(Guid cartId)
-        {
-            return await DbContext.Orders.FirstOrDefaultAsync(o => o.CartId == cartId);
-        }
-
-        public async Task<EOrder> AddOrderAsync(EOrder order)
+        public async Task<Order> AddOrderAsync(Order order)
         {
             await DbContext.Orders.AddAsync(order);
             await DbContext.SaveChangesAsync();

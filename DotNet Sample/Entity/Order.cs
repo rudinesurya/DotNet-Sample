@@ -1,8 +1,13 @@
-﻿namespace DotNet_Sample.Controllers.Dto
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DotNet_Sample.Entity
 {
+    [Table("Orders")]
     public class Order
     {
         public Guid Id { get; set; }
+
+        public Guid CartId { get; set; }
 
         public string UserName { get; set; }
 

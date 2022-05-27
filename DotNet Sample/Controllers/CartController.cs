@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using DotNet_Sample.Controllers.Dto;
-using DotNet_Sample.Controllers.Dto.Cart_Action;
+﻿using DotNet_Sample.Controllers.Cart_Action;
 using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace DotNet_Sample.Controllers
 {
@@ -13,38 +12,24 @@ namespace DotNet_Sample.Controllers
     {
         private readonly ICartService CartService;
         private readonly IOrderService OrderService;
-        private readonly IMapper Mapper;
 
-        public CartController(ICartService cartService, IOrderService orderService, IMapper mapper)
+        public CartController(ICartService cartService, IOrderService orderService)
         {
             CartService = cartService;
             OrderService = orderService;
-            Mapper = mapper;
         }
 
         [HttpGet(Name = "GetCarts")]
+        [EnableQuery]
         [ProducesResponseType(typeof(IList<Cart>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             var carts = await CartService.GetCartsAsync();
-            return Ok(Mapper.Map<IList<ECart>, IList<Cart>>(carts));
-        }
-
-        [HttpGet("username/{userName}", Name = "GetCartByUserName")]
-        [ProducesResponseType(typeof(Cart), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get([FromRoute] string userName)
-        {
-            var cart = await CartService.GetCartByUserNameAsync(userName);
-
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(Mapper.Map<ECart, Cart>(cart));
+            return Ok(carts);
         }
 
         [HttpGet("{id}", Name = "GetCartById")]
+        [EnableQuery]
         [ProducesResponseType(typeof(Cart), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
@@ -55,7 +40,7 @@ namespace DotNet_Sample.Controllers
                 return NotFound();
             }
 
-            return Ok(Mapper.Map<ECart, Cart>(cart));
+            return Ok(cart);
         }
 
         [HttpPost("AddItem", Name = "AddCartItem")]
@@ -107,12 +92,12 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            var order = await OrderService.GetOrderByCartIdAsync(cartId);
+            var order = (await OrderService.GetOrdersAsync()).FirstOrDefault(o => o.CartId == cartId);
             if (order == null)
             {
                 var cart = await CartService.GetCartByIdAsync(cartId);
 
-                var newOrder = new EOrder()
+                var newOrder = new Order()
                 {
                     Id = Guid.NewGuid(),
                     CartId = cartId,
