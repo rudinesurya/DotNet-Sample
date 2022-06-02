@@ -1,5 +1,4 @@
 ﻿using DotNet_Sample.Controllers;
-using DotNet_Sample.Controllers.Dto;
 using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using DotNet_Sample.Test.Helper;
@@ -22,9 +21,9 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<ICategoryService>();
-            var categoryList = new List<ECategory>() { FixedData.GetNewECategory(Guid.NewGuid(), "CAT_1"), FixedData.GetNewECategory(Guid.NewGuid(), "CAT_2") };
+            var categoryList = new List<Category>() { FixedData.GetNewCategory(Guid.NewGuid(), "CAT_1"), FixedData.GetNewCategory(Guid.NewGuid(), "CAT_2") };
             service.Setup(_ => _.GetCategoriesAsync()).ReturnsAsync(categoryList);
-            var sut = new CategoryController(service.Object, Mapper);
+            var sut = new CategoryController(service.Object);
 
             /// Act
             var result = await sut.Get() as OkObjectResult;
@@ -39,8 +38,8 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<ICategoryService>();
-            service.Setup(_ => _.GetCategoriesAsync()).ReturnsAsync(new List<ECategory>());
-            var sut = new CategoryController(service.Object, Mapper);
+            service.Setup(_ => _.GetCategoriesAsync()).ReturnsAsync(new List<Category>());
+            var sut = new CategoryController(service.Object);
 
             /// Act
             var result = await sut.Get() as OkObjectResult;
@@ -56,8 +55,8 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<ICategoryService>();
             var categoryId = Guid.NewGuid();
-            service.Setup(_ => _.GetCategoryByIdAsync(categoryId)).ReturnsAsync(FixedData.GetNewECategory(categoryId, "CAT_1"));
-            var sut = new CategoryController(service.Object, Mapper);
+            service.Setup(_ => _.GetCategoryByIdAsync(categoryId)).ReturnsAsync(FixedData.GetNewCategory(categoryId, "CAT_1"));
+            var sut = new CategoryController(service.Object);
 
             /// Act
             var result = await sut.Get(categoryId) as OkObjectResult;
@@ -72,8 +71,8 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<ICategoryService>();
             var invalidId = Guid.NewGuid();
-            service.Setup(_ => _.GetCategoryByIdAsync(invalidId)).ReturnsAsync(default(ECategory));
-            var sut = new CategoryController(service.Object, Mapper);
+            service.Setup(_ => _.GetCategoryByIdAsync(invalidId)).ReturnsAsync(default(Category));
+            var sut = new CategoryController(service.Object);
 
             /// Act
             var result = await sut.Get(invalidId) as NotFoundResult;
@@ -88,8 +87,8 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<ICategoryService>();
             var newCategoryId = Guid.NewGuid();
-            service.Setup(_ => _.AddCategoryAsync(FixedData.GetNewECategory(newCategoryId, "CAT_NEW"))).ReturnsAsync(FixedData.GetNewECategory(newCategoryId, "CAT_NEW"));
-            var sut = new CategoryController(service.Object, Mapper);
+            service.Setup(_ => _.AddCategoryAsync(FixedData.GetNewCategory(newCategoryId, "CAT_NEW"))).ReturnsAsync(FixedData.GetNewCategory(newCategoryId, "CAT_NEW"));
+            var sut = new CategoryController(service.Object);
 
             /// Act
             var result = await sut.Add(FixedData.GetNewCategory(newCategoryId, "CAT_NEW")) as CreatedAtActionResult;

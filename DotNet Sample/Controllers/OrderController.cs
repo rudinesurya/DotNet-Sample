@@ -2,12 +2,13 @@
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DotNet_Sample.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class OrderController : ControllerBase
+    public class OrderController : ODataController
     {
         private readonly IOrderService OrderService;
 

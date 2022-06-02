@@ -13,22 +13,22 @@ namespace DotNet_Sample.Test.ServiceTest
 {
     public class CartServiceTest : BaseServiceTest
     {
-        List<ECart> seedList;
+        List<Cart> seedList;
         Guid c1Id;
-        ECart c2; 
+        Cart c2;
 
         public CartServiceTest()
         {
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var c1 = FixedData.GetNewECart(Guid.NewGuid(), "USER_1");
+                var c1 = FixedData.GetNewCart(Guid.NewGuid(), "USER_1");
                 c1Id = c1.Id;
 
-                c2 = FixedData.GetNewECart(Guid.NewGuid(), "USER_2");
-                c2.Items = new List<ECartItem> { FixedData.GetNewECartItem(Guid.NewGuid(), Guid.NewGuid()) };
+                c2 = FixedData.GetNewCart(Guid.NewGuid(), "USER_2");
+                c2.Items = new List<CartItem> { FixedData.GetNewCartItem(Guid.NewGuid(), Guid.NewGuid()) };
 
-                seedList = new List<ECart>() { c1, c2 };
+                seedList = new List<Cart>() { c1, c2 };
 
                 DbContext.Carts.AddRange(seedList);
                 DbContext.SaveChanges();

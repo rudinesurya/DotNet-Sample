@@ -1,5 +1,4 @@
-﻿using DotNet_Sample.Controllers.Dto;
-using DotNet_Sample.Controllers.Dto.Cart_Action;
+﻿using DotNet_Sample.Controllers.Cart_Action;
 using DotNet_Sample.Entity;
 using System;
 
@@ -8,30 +7,6 @@ namespace DotNet_Sample.Test.MockData
     public class FixedData
     {
         #region DTO
-
-        public static Category GetNewCategory(Guid id, string name)
-        {
-            return new Category()
-            {
-                Id = id,
-                Name = name,
-                Description = "",
-            };
-        }
-
-        public static Product GetNewProduct(Guid id, string name, Guid categoryId = default)
-        {
-            return new Product()
-            {
-                Id = id,
-                CategoryId = categoryId,
-                Name = name,
-                Summary = "Summary",
-                Description = "Description",
-                ImageFile = "default.png",
-                Price = 1000.00M,
-            };
-        }
 
         public static AddCartItem GetNewAddCartItemAction(string username, Guid productId)
         {
@@ -56,9 +31,9 @@ namespace DotNet_Sample.Test.MockData
 
         #region Entity
 
-        public static ECategory GetNewECategory(Guid id, string name)
+        public static Category GetNewCategory(Guid id, string name)
         {
-            return new ECategory()
+            return new Category()
             {
                 Id = id,
                 Name = name,
@@ -66,9 +41,9 @@ namespace DotNet_Sample.Test.MockData
             };
         }
 
-        public static EProduct GetNewEProduct(Guid id, string name)
+        public static Product GetNewProduct(Guid id, string name)
         {
-            return new EProduct()
+            return new Product()
             {
                 Id = id,
                 Name = name,
@@ -79,18 +54,18 @@ namespace DotNet_Sample.Test.MockData
             };
         }
 
-        public static ECart GetNewECart(Guid id, string username)
+        public static Cart GetNewCart(Guid id, string username)
         {
-            return new ECart()
+            return new Cart()
             {
                 Id = id,
                 UserName = username,
             };
         }
 
-        public static ECartItem GetNewECartItem(Guid id, Guid productId)
+        public static CartItem GetNewCartItem(Guid id, Guid productId)
         {
-            return new ECartItem()
+            return new CartItem()
             {
                 Id = id,
                 Quantity = 1,
@@ -99,9 +74,9 @@ namespace DotNet_Sample.Test.MockData
             };
         }
 
-        public static EOrder GetNewEOrder(Guid id, string username)
+        public static Order GetNewOrder(Guid id, string username)
         {
-            return new EOrder()
+            return new Order()
             {
                 Id = id,
                 UserName = username,

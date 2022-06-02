@@ -3,12 +3,13 @@ using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DotNet_Sample.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CartController : ControllerBase
+    public class CartController : ODataController
     {
         private readonly ICartService CartService;
         private readonly IOrderService OrderService;
@@ -92,7 +93,7 @@ namespace DotNet_Sample.Controllers
                 return BadRequest(ModelState);
             }
 
-            var order = (await OrderService.GetOrdersAsync()).FirstOrDefault(o => o.CartId == cartId);
+            var order = await OrderService.GetOrderByCartIdAsync(cartId);
             if (order == null)
             {
                 var cart = await CartService.GetCartByIdAsync(cartId);

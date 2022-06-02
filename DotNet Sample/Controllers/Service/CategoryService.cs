@@ -6,11 +6,11 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface ICategoryService
     {
-        Task<Category> AddCategoryAsync(Category category);
-
         Task<IList<Category>> GetCategoriesAsync();
 
         Task<Category> GetCategoryByIdAsync(Guid id);
+
+        Task<Category> AddCategoryAsync(Category category);
     }
 
     public class CategoryService : ICategoryService

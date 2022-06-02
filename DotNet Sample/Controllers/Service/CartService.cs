@@ -6,15 +6,17 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface ICartService
     {
-        Task<Cart> AddItemAsync(string userName, Guid productId, int quantity);
-
-        Task<Cart> ClearCartAsync(Guid cartId);
+        Task<IList<Cart>> GetCartsAsync();
 
         Task<Cart> GetCartByIdAsync(Guid id);
 
-        Task<IList<Cart>> GetCartsAsync();
+        Task<Cart> GetCartByUserNameAsync(string userName);
+
+        Task<Cart> AddItemAsync(string userName, Guid productId, int quantity);
 
         Task<Cart> RemoveItemAsync(Guid cartId, Guid cartItemId);
+
+        Task<Cart> ClearCartAsync(Guid cartId);
     }
 
     public class CartService : ICartService
@@ -34,6 +36,11 @@ namespace DotNet_Sample.Controllers.Service
         public async Task<Cart> GetCartByIdAsync(Guid id)
         {
             return await DbContext.Carts.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<Cart> GetCartByUserNameAsync(string userName)
+        {
+            return await DbContext.Carts.FirstOrDefaultAsync(c => c.UserName == userName);
         }
 
         public async Task<Cart> AddItemAsync(string userName, Guid productId, int quantity)

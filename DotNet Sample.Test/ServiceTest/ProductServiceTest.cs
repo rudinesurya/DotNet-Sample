@@ -13,7 +13,7 @@ namespace DotNet_Sample.Test.ServiceTest
 {
     public class ProductServiceTest : BaseServiceTest
     {
-        List<EProduct> seedList;
+        List<Product> seedList;
         Guid p1Id;
 
         public ProductServiceTest()
@@ -21,13 +21,13 @@ namespace DotNet_Sample.Test.ServiceTest
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var p1 = FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_1");
+                var p1 = FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_1");
                 p1Id = p1.Id;
-                p1.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_1");
-                var p2 = FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_2");
-                p2.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_2");
+                p1.Category = FixedData.GetNewCategory(Guid.NewGuid(), "CAT_1");
+                var p2 = FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_2");
+                p2.Category = FixedData.GetNewCategory(Guid.NewGuid(), "CAT_2");
 
-                seedList = new List<EProduct>() { p1, p2 };
+                seedList = new List<Product>() { p1, p2 };
 
                 DbContext.Products.AddRange(seedList);
                 DbContext.SaveChanges();
@@ -78,8 +78,8 @@ namespace DotNet_Sample.Test.ServiceTest
         {
             /// Arrange
             var sut = new ProductService(DbContext);
-            var p = FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_NEW");
-            p.Category = FixedData.GetNewECategory(Guid.NewGuid(), "CAT_NEW");
+            var p = FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_NEW");
+            p.Category = FixedData.GetNewCategory(Guid.NewGuid(), "CAT_NEW");
 
             /// Act
             var result = await sut.AddProductAsync(p);

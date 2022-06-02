@@ -3,7 +3,6 @@ using DotNet_Sample.Entity;
 using DotNet_Sample.Test.Helper;
 using DotNet_Sample.Test.MockData;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +13,7 @@ namespace DotNet_Sample.Test.ServiceTest
 {
     public class OrderServiceTest : BaseServiceTest
     {
-        List<EOrder> seedList;
+        List<Order> seedList;
         Guid o1Id;
         Guid o2CartId;
 
@@ -23,13 +22,13 @@ namespace DotNet_Sample.Test.ServiceTest
             if (DbContext.Database.EnsureCreated())
             {
                 // Seed Products
-                var o1 = FixedData.GetNewEOrder(Guid.NewGuid(), "USER_1");
+                var o1 = FixedData.GetNewOrder(Guid.NewGuid(), "USER_1");
                 o1Id = o1.Id;
-                var o2 = FixedData.GetNewEOrder(Guid.NewGuid(), "USER_2");
+                var o2 = FixedData.GetNewOrder(Guid.NewGuid(), "USER_2");
                 o2CartId = Guid.NewGuid();
                 o2.CartId = o2CartId;
 
-                seedList = new List<EOrder>() { o1, o2 };
+                seedList = new List<Order>() { o1, o2 };
 
                 DbContext.Orders.AddRange(seedList);
                 DbContext.SaveChanges();
@@ -93,7 +92,7 @@ namespace DotNet_Sample.Test.ServiceTest
         {
             /// Arrange
             var sut = new OrderService(DbContext);
-            
+
             /// Act
             var result = await sut.GetOrderByCartIdAsync(o2CartId);
 
@@ -106,7 +105,7 @@ namespace DotNet_Sample.Test.ServiceTest
         {
             /// Arrange
             var sut = new OrderService(DbContext);
-            var o = FixedData.GetNewEOrder(Guid.NewGuid(), "USER_1");
+            var o = FixedData.GetNewOrder(Guid.NewGuid(), "USER_1");
 
             /// Act
             var result = await sut.AddOrderAsync(o);

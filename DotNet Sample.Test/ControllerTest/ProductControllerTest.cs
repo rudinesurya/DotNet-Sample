@@ -1,5 +1,4 @@
 using DotNet_Sample.Controllers;
-using DotNet_Sample.Controllers.Dto;
 using DotNet_Sample.Controllers.Service;
 using DotNet_Sample.Entity;
 using DotNet_Sample.Test.Helper;
@@ -22,9 +21,9 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IProductService>();
-            var productList = new List<EProduct>() { FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_1"), FixedData.GetNewEProduct(Guid.NewGuid(), "PRODUCT_2") };
+            var productList = new List<Product>() { FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_1"), FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_2") };
             service.Setup(_ => _.GetProductsAsync()).ReturnsAsync(productList);
-            var sut = new ProductController(service.Object, Mapper);
+            var sut = new ProductController(service.Object);
 
             /// Act
             var result = await sut.Get() as OkObjectResult;
@@ -39,8 +38,8 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IProductService>();
-            service.Setup(_ => _.GetProductsAsync()).ReturnsAsync(new List<EProduct>());
-            var sut = new ProductController(service.Object, Mapper);
+            service.Setup(_ => _.GetProductsAsync()).ReturnsAsync(new List<Product>());
+            var sut = new ProductController(service.Object);
 
             /// Act
             var result = await sut.Get() as OkObjectResult;
@@ -56,8 +55,8 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IProductService>();
             var productId = Guid.NewGuid();
-            service.Setup(_ => _.GetProductByIdAsync(productId)).ReturnsAsync(FixedData.GetNewEProduct(productId, "PRODUCT_1"));
-            var sut = new ProductController(service.Object, Mapper);
+            service.Setup(_ => _.GetProductByIdAsync(productId)).ReturnsAsync(FixedData.GetNewProduct(productId, "PRODUCT_1"));
+            var sut = new ProductController(service.Object);
 
             /// Act
             var result = await sut.Get(productId) as OkObjectResult;
@@ -72,11 +71,11 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IProductService>();
             var invalidId = Guid.NewGuid();
-            service.Setup(_ => _.GetProductByIdAsync(invalidId)).ReturnsAsync(default(EProduct));
-            var sut = new ProductController(service.Object, Mapper);
+            service.Setup(_ => _.GetProductByIdAsync(invalidId)).ReturnsAsync(default(Product));
+            var sut = new ProductController(service.Object);
 
             /// Act
-            var result = await sut.Get(invalidId) as NotFoundResult; 
+            var result = await sut.Get(invalidId) as NotFoundResult;
 
             /// Assert
             result.StatusCode.Should().Be(404);
@@ -88,8 +87,8 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IProductService>();
             var newProductId = Guid.NewGuid();
-            service.Setup(_ => _.AddProductAsync(FixedData.GetNewEProduct(newProductId, "PRODUCT_NEW"))).ReturnsAsync(FixedData.GetNewEProduct(newProductId, "PRODUCT_NEW"));
-            var sut = new ProductController(service.Object, Mapper);
+            service.Setup(_ => _.AddProductAsync(FixedData.GetNewProduct(newProductId, "PRODUCT_NEW"))).ReturnsAsync(FixedData.GetNewProduct(newProductId, "PRODUCT_NEW"));
+            var sut = new ProductController(service.Object);
 
             /// Act
             var result = await sut.Add(FixedData.GetNewProduct(newProductId, "PRODUCT_NEW")) as CreatedAtActionResult;

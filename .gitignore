@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /ApiClient/SampleApiClient/SampleApiClient.cs
 /DotNet Sample/DotNetSample.db
+/DotNet Sample/DotNetSample.db-wal
+/DotNet Sample/DotNetSample.db-shm

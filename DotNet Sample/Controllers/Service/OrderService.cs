@@ -6,9 +6,13 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface IOrderService
     {
+        Task<IList<Order>> GetOrdersAsync();
+
         Task<Order> GetOrderByIdAsync(Guid id);
 
-        Task<IList<Order>> GetOrdersAsync();
+        Task<Order?> GetOrderByCartIdAsync(Guid cartId);
+
+        Task<IList<Order>> GetOrdersByUserNameAsync(string userName);
 
         Task<Order> AddOrderAsync(Order order);
     }
@@ -30,6 +34,16 @@ namespace DotNet_Sample.Controllers.Service
         public async Task<Order> GetOrderByIdAsync(Guid id)
         {
             return await DbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+        }
+
+        public async Task<Order?> GetOrderByCartIdAsync(Guid cartId)
+        {
+            return await DbContext.Orders.FirstOrDefaultAsync(o => o.CartId == cartId);
+        }
+
+        public async Task<IList<Order>> GetOrdersByUserNameAsync(string userName)
+        {
+            return await DbContext.Orders.Where(o => o.UserName == userName).ToListAsync();
         }
 
         public async Task<Order> AddOrderAsync(Order order)
