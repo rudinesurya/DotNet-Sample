@@ -22,7 +22,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IProductService>();
             var productList = new List<Product>() { FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_1"), FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_2") };
-            service.Setup(_ => _.GetProductsAsync()).ReturnsAsync(productList);
+            service.Setup(_ => _.GetProductsAsync()).Returns(productList.AsQueryable());
             var sut = new ProductController(service.Object);
 
             /// Act
@@ -30,7 +30,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Product>).Count.Should().Be(productList.Count());
+            (result.Value as IQueryable<Product>).ToList().Count.Should().Be(productList.Count());
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IProductService>();
-            service.Setup(_ => _.GetProductsAsync()).ReturnsAsync(new List<Product>());
+            service.Setup(_ => _.GetProductsAsync()).Returns(new List<Product>().AsQueryable());
             var sut = new ProductController(service.Object);
 
             /// Act
@@ -46,7 +46,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Product>).Count.Should().Be(0);
+            (result.Value as IQueryable<Product>).ToList().Count.Should().Be(0);
         }
 
         [Fact]

@@ -6,7 +6,7 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface ICartService
     {
-        Task<IList<Cart>> GetCartsAsync();
+        IQueryable<Cart> GetCartsAsync();
 
         Task<Cart> GetCartByIdAsync(Guid id);
 
@@ -28,20 +28,11 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IList<Cart>> GetCartsAsync()
-        {
-            return await DbContext.Carts.ToListAsync();
-        }
+        public IQueryable<Cart> GetCartsAsync() => DbContext.Carts.AsQueryable();
 
-        public async Task<Cart> GetCartByIdAsync(Guid id)
-        {
-            return await DbContext.Carts.FirstOrDefaultAsync(c => c.Id == id);
-        }
+        public Task<Cart> GetCartByIdAsync(Guid id) => DbContext.Carts.FirstOrDefaultAsync(c => c.Id == id);
 
-        public async Task<Cart> GetCartByUserNameAsync(string userName)
-        {
-            return await DbContext.Carts.FirstOrDefaultAsync(c => c.UserName == userName);
-        }
+        public Task<Cart> GetCartByUserNameAsync(string userName) => DbContext.Carts.FirstOrDefaultAsync(c => c.UserName == userName);
 
         public async Task<Cart> AddItemAsync(string userName, Guid productId, int quantity)
         {

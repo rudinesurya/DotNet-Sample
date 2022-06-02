@@ -3,6 +3,7 @@ using DotNet_Sample.Entity;
 using DotNet_Sample.Test.Helper;
 using DotNet_Sample.Test.MockData;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace DotNet_Sample.Test.ServiceTest
             var sut = new ProductService(DbContext);
 
             /// Act
-            var result = await sut.GetProductsAsync();
+            var result = await sut.GetProductsAsync().ToListAsync();
 
             /// Assert
             result.Should().HaveCount(seedList.Count());

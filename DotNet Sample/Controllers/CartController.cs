@@ -25,8 +25,7 @@ namespace DotNet_Sample.Controllers
         [ProducesResponseType(typeof(IList<Cart>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
-            var carts = await CartService.GetCartsAsync();
-            return Ok(carts);
+            return Ok(CartService.GetCartsAsync());
         }
 
         [HttpGet("{id}", Name = "GetCartById")]

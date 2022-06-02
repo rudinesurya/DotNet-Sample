@@ -6,7 +6,7 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface IProductService
     {
-        Task<IList<Product>> GetProductsAsync();
+        IQueryable<Product> GetProductsAsync();
 
         Task<Product> GetProductByIdAsync(Guid id);
 
@@ -22,15 +22,12 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IList<Product>> GetProductsAsync()
+        public IQueryable<Product> GetProductsAsync()
         {
-            return await DbContext.Products.ToListAsync();
+            return DbContext.Products.AsQueryable();
         }
 
-        public async Task<Product> GetProductByIdAsync(Guid id)
-        {
-            return await DbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
-        }
+        public Task<Product> GetProductByIdAsync(Guid id) => DbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
 
         public async Task<Product> AddProductAsync(Product product)
         {

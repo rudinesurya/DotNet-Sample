@@ -22,8 +22,7 @@ namespace DotNet_Sample.Controllers
         [ProducesResponseType(typeof(IList<Category>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
-            var categories = await CategoryService.GetCategoriesAsync();
-            return Ok(categories);
+            return Ok(CategoryService.GetCategoriesAsync());
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]

@@ -23,7 +23,7 @@ namespace DotNet_Sample.Test.ControllerTest
             var cartService = new Mock<ICartService>();
             var orderService = new Mock<IOrderService>();
             var cartList = new List<Cart>() { FixedData.GetNewCart(Guid.NewGuid(), "CART_1"), FixedData.GetNewCart(Guid.NewGuid(), "CART_2") };
-            cartService.Setup(_ => _.GetCartsAsync()).ReturnsAsync(cartList);
+            cartService.Setup(_ => _.GetCartsAsync()).Returns(cartList.AsQueryable());
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
@@ -31,7 +31,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Cart>).Count.Should().Be(cartList.Count());
+            (result.Value as IQueryable<Cart>).ToList().Count.Should().Be(cartList.Count());
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var cartService = new Mock<ICartService>();
             var orderService = new Mock<IOrderService>();
-            cartService.Setup(_ => _.GetCartsAsync()).ReturnsAsync(new List<Cart>());
+            cartService.Setup(_ => _.GetCartsAsync()).Returns(new List<Cart>().AsQueryable());
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
@@ -48,7 +48,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Cart>).Count.Should().Be(0);
+            (result.Value as IQueryable<Cart>).ToList().Count.Should().Be(0);
         }
 
         [Fact]

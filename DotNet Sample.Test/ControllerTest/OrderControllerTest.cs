@@ -22,7 +22,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IOrderService>();
             var orderList = new List<Order>() { FixedData.GetNewOrder(Guid.NewGuid(), "USER_1"), FixedData.GetNewOrder(Guid.NewGuid(), "USER_2") };
-            service.Setup(_ => _.GetOrdersAsync()).ReturnsAsync(orderList);
+            service.Setup(_ => _.GetOrdersAsync()).Returns(orderList.AsQueryable());
             var sut = new OrderController(service.Object);
 
             /// Act
@@ -30,7 +30,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Order>).Count.Should().Be(orderList.Count());
+            (result.Value as IQueryable<Order>).ToList().Count.Should().Be(orderList.Count());
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IOrderService>();
-            service.Setup(_ => _.GetOrdersAsync()).ReturnsAsync(new List<Order>());
+            service.Setup(_ => _.GetOrdersAsync()).Returns(new List<Order>().AsQueryable());
             var sut = new OrderController(service.Object);
 
             /// Act
@@ -46,7 +46,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Order>).Count.Should().Be(0);
+            (result.Value as IQueryable<Order>).ToList().Count.Should().Be(0);
         }
 
         [Fact]

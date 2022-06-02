@@ -22,8 +22,7 @@ namespace DotNet_Sample.Controllers
         [ProducesResponseType(typeof(IList<Order>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
-            var orders = await OrderService.GetOrdersAsync();
-            return Ok(orders);
+            return Ok(OrderService.GetOrdersAsync());
         }
 
         [HttpGet("{id}", Name = "GetOrderById")]

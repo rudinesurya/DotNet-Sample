@@ -6,7 +6,7 @@ namespace DotNet_Sample.Controllers.Service
 {
     public interface ICategoryService
     {
-        Task<IList<Category>> GetCategoriesAsync();
+        IQueryable<Category> GetCategoriesAsync();
 
         Task<Category> GetCategoryByIdAsync(Guid id);
 
@@ -22,15 +22,12 @@ namespace DotNet_Sample.Controllers.Service
             DbContext = context;
         }
 
-        public async Task<IList<Category>> GetCategoriesAsync()
+        public IQueryable<Category> GetCategoriesAsync()
         {
-            return await DbContext.Categories.ToListAsync();
+            return DbContext.Categories.AsQueryable();
         }
 
-        public async Task<Category> GetCategoryByIdAsync(Guid id)
-        {
-            return await DbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
-        }
+        public Task<Category> GetCategoryByIdAsync(Guid id) => DbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task<Category> AddCategoryAsync(Category category)
         {

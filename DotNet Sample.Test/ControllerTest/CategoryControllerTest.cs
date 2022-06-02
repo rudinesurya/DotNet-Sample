@@ -22,7 +22,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<ICategoryService>();
             var categoryList = new List<Category>() { FixedData.GetNewCategory(Guid.NewGuid(), "CAT_1"), FixedData.GetNewCategory(Guid.NewGuid(), "CAT_2") };
-            service.Setup(_ => _.GetCategoriesAsync()).ReturnsAsync(categoryList);
+            service.Setup(_ => _.GetCategoriesAsync()).Returns(categoryList.AsQueryable());
             var sut = new CategoryController(service.Object);
 
             /// Act
@@ -30,7 +30,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Category>).Count.Should().Be(categoryList.Count());
+            (result.Value as IQueryable<Category>).ToList().Count.Should().Be(categoryList.Count());
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<ICategoryService>();
-            service.Setup(_ => _.GetCategoriesAsync()).ReturnsAsync(new List<Category>());
+            service.Setup(_ => _.GetCategoriesAsync()).Returns(new List<Category>().AsQueryable());
             var sut = new CategoryController(service.Object);
 
             /// Act
@@ -46,7 +46,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             /// Assert
             result.StatusCode.Should().Be(200);
-            (result.Value as List<Category>).Count.Should().Be(0);
+            (result.Value as IQueryable<Category>).ToList().Count.Should().Be(0);
         }
 
         [Fact]

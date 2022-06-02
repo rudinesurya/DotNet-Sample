@@ -22,8 +22,7 @@ namespace DotNet_Sample.Controllers
         [ProducesResponseType(typeof(IList<Product>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
-            var products = await ProductService.GetProductsAsync();
-            return Ok(products);
+            return Ok(ProductService.GetProductsAsync());
         }
 
         [HttpGet("{id}", Name = "GetProductById")]
