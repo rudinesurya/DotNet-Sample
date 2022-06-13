@@ -15,7 +15,8 @@ namespace DotNet_Sample.Test.Helper
     {
         public static async Task<V?> GetAsync<V>(this HttpClient client, string requestUri)
         {
-            return await (await client.GetAsync(requestUri)).Content.ReadAsAsync<V>();
+            var result = await client.GetAsync(requestUri);
+            return result.IsSuccessStatusCode ? await result.Content.ReadAsAsync<V>() : default;
         }
 
         public static async Task<HttpResponseMessage> PostAsync<T>(this HttpClient client, string requestUri, T payload)
@@ -25,7 +26,8 @@ namespace DotNet_Sample.Test.Helper
 
         public static async Task<V?> PostAsyncAndReturn<T, V>(this HttpClient client, string requestUri, T payload)
         {
-            return await (await client.PostAsync(requestUri, JsonContent.Create(payload))).Content.ReadAsAsync<V>();
+            var result = await client.PostAsync(requestUri, JsonContent.Create(payload));
+            return result.IsSuccessStatusCode ? await result.Content.ReadAsAsync<V>() : default;
         }
     }
 
