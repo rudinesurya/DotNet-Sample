@@ -1,8 +1,11 @@
-﻿using DotNet_Sample.Entity;
+﻿using DotNet_Sample.Data;
+using DotNet_Sample.Entity;
+using System;
+using System.Collections.Generic;
 
-namespace DotNet_Sample.Data
+namespace DotNet_Sample.Test.Helper
 {
-    public class AppDbContextSeed
+    public class TestAppDbContextSeed
     {
         public static void Seed(AppDbContext dbContext)
         {

@@ -32,6 +32,14 @@ namespace DotNet_Sample.Test.Helper
                         .UseApplicationServiceProvider(sp)
                         .Options;
                 });
+
+                var sp = services.BuildServiceProvider();
+                using (var scope = sp.CreateScope())
+                {
+                    var scopedServices = scope.ServiceProvider;
+                    var db = scopedServices.GetRequiredService<AppDbContext>();
+                    TestAppDbContextSeed.Seed(db);
+                }
             });
 
             return base.CreateHost(builder);

@@ -35,23 +35,25 @@ if (app.Environment.IsDevelopment())
 }
 
 // Seed Database
-//try
-//{
-//    using (var scope = app.Services.CreateScope())
-//    {
-//        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//        AppDbContextSeed.Seed(context);
-//    }
-//}
-//catch (Exception ex)
-//{
-//    Console.WriteLine(ex);
-//}
-
-using (var scope = app.Services.CreateScope())
+try
 {
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.EnsureCreated();
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        switch (app.Environment.EnvironmentName)
+        {
+            case "Development":
+                AppDbContextSeed.Seed(context);
+                break;
+            default:
+                break;
+        }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
 }
 
 app.UseHttpsRedirection();
