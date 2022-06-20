@@ -35,7 +35,7 @@ namespace DotNet_Sample.Test.ControllerTest
         }
 
         [Fact]
-        public async Task GetOrdersAsync_ReturnEmptyCollection()
+        public async Task GetCartsAsync_ReturnEmptyCollection()
         {
             /// Arrange
             var cartService = new Mock<ICartService>();
@@ -52,7 +52,7 @@ namespace DotNet_Sample.Test.ControllerTest
         }
 
         [Fact]
-        public async Task GetOrderByIdAsync_ReturnFound()
+        public async Task GetCartByIdAsync_ReturnFound()
         {
             /// Arrange
             var cartService = new Mock<ICartService>();
@@ -69,7 +69,7 @@ namespace DotNet_Sample.Test.ControllerTest
         }
 
         [Fact]
-        public async Task GetOrderByIdAsync_ReturnNotFound()
+        public async Task GetCartByIdAsync_ReturnNotFound()
         {
             /// Arrange
             var cartService = new Mock<ICartService>();
