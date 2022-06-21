@@ -11,6 +11,8 @@ namespace DotNet_Sample.Test.IntegrationTest
 {
     public class SampleTest : BaseIntegrationTest
     {
+        public SampleTest() : base("Test", null) { }
+
         [Fact]
         public async Task TestForSuccessfullOrderCreation()
         {

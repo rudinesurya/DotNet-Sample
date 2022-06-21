@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNet_Sample.Data;
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -30,10 +31,9 @@ namespace DotNet_Sample.Test.Helper
         TestApp App;
         public HttpClient TestClient;
 
-        public BaseIntegrationTest()
+        public BaseIntegrationTest(string env, Func<AppDbContext, bool> seed)
         {
-            App = new TestApp();
-
+            App = new TestApp(env, seed);
             TestClient = App.CreateClient();
         }
 

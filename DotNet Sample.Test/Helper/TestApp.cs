@@ -9,16 +9,18 @@ namespace DotNet_Sample.Test.Helper
 {
     public class TestApp : WebApplicationFactory<Program>
     {
-        private readonly string _environment;
+        private readonly string Environment;
+        private readonly Func<AppDbContext, bool> Seed;
 
-        public TestApp(string environment = "Test")
+        public TestApp(string environment, Func<AppDbContext, bool> seed)
         {
-            _environment = environment;
+            Environment = environment;
+            Seed = seed;
         }
 
         protected override IHost CreateHost(IHostBuilder builder)
         {
-            builder.UseEnvironment(_environment);
+            builder.UseEnvironment(Environment);
 
             var databaseName = "testdb" + Guid.NewGuid().ToString();
 
@@ -38,7 +40,12 @@ namespace DotNet_Sample.Test.Helper
                 {
                     var scopedServices = scope.ServiceProvider;
                     var db = scopedServices.GetRequiredService<AppDbContext>();
-                    TestAppDbContextSeed.Seed(db);
+
+                    if (db.Database.EnsureCreated())
+                    {
+                        if (Seed != null)
+                            Seed(db);
+                    }
                 }
             });
 
