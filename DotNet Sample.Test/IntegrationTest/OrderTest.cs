@@ -5,7 +5,6 @@ using DotNet_Sample.Test.MockData;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,10 +12,13 @@ namespace DotNet_Sample.Test.IntegrationTest
 {
     public class OrderTest : BaseIntegrationTest
     {
+        static int orderCount;
+
         static Func<AppDbContext, bool> seed = (db) =>
         {
             // Seed Orders
-            db.Orders.AddRange(FixedData.GetFixedOrders());
+            orderCount = 1;
+            db.Orders.AddRange(SeedData.MyOrder);
 
             db.SaveChangesAsync();
 
@@ -33,17 +35,19 @@ namespace DotNet_Sample.Test.IntegrationTest
 
             /// Assert
             result.Should().NotBeNull();
-            result.Count.Should().Be(FixedData.GetFixedOrders().Count());
+            result.Count.Should().Be(orderCount);
         }
 
         [Fact]
         public async Task GetOrderByIdAsync_ReturnFound()
         {
             /// Arrange 
-            var id = FixedData.GetFixedOrders().FirstOrDefault().Id;
+            var id = SeedData.MyOrder.Id;
 
             /// Act
-            var result = await TestClient.GetAsync<Product>($"/order/{id}");
+            var result = await TestClient.GetAsync<Order>($"/order/{id}");
+
+            var result33 = await TestClient.GetAsync<List<Cart>>($"/cart");
 
             /// Assert
             result.Should().NotBeNull();

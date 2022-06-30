@@ -9,6 +9,8 @@ namespace DotNet_Sample.Entity
 
         public Guid CartId { get; set; }
 
+        public Cart? Cart { get; set; }
+
         public string UserName { get; set; }
 
         public decimal TotalPrice { get; set; }

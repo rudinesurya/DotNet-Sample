@@ -22,7 +22,10 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var cartService = new Mock<ICartService>();
             var orderService = new Mock<IOrderService>();
-            var cartList = new List<Cart>() { FixedData.GetNewCart(Guid.NewGuid(), "CART_1"), FixedData.GetNewCart(Guid.NewGuid(), "CART_2") };
+            var cartList = new List<Cart>() {
+                FixedData.GetNewCart(Guid.NewGuid(), "USER_1"),
+                FixedData.GetNewCart(Guid.NewGuid(), "USER_2")
+            };
             cartService.Setup(_ => _.GetCartsAsync()).Returns(cartList.AsQueryable());
             var sut = new CartController(cartService.Object, orderService.Object);
 
@@ -58,7 +61,7 @@ namespace DotNet_Sample.Test.ControllerTest
             var cartService = new Mock<ICartService>();
             var orderService = new Mock<IOrderService>();
             var cartId = Guid.NewGuid();
-            cartService.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewCart(cartId, "CART_1"));
+            cartService.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewCart(cartId, "USER_1"));
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
@@ -92,15 +95,15 @@ namespace DotNet_Sample.Test.ControllerTest
             var cartService = new Mock<ICartService>();
             var orderService = new Mock<IOrderService>();
 
-            var productId = Guid.NewGuid();
+            var product = FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_NEW");
             var cart = FixedData.GetNewCart(Guid.NewGuid(), "USER_1");
-            cart.Items = new List<CartItem> { FixedData.GetNewCartItem(Guid.NewGuid(), productId) };
+            cart.Items = new List<CartItem> { FixedData.GetNewCartItem(Guid.NewGuid(), product) };
 
-            cartService.Setup(_ => _.AddItemAsync("USER_1", productId, 1)).ReturnsAsync(cart);
+            cartService.Setup(_ => _.AddItemAsync("USER_1", product.Id, 1)).ReturnsAsync(cart);
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
-            var result = await sut.AddItem(FixedData.GetNewAddCartItemAction("USER_1", productId)) as CreatedAtActionResult;
+            var result = await sut.AddItem(FixedData.GetNewAddCartItemAction("USER_1", product)) as CreatedAtActionResult;
 
             /// Assert
             result.StatusCode.Should().Be(201);
@@ -113,13 +116,14 @@ namespace DotNet_Sample.Test.ControllerTest
             var orderService = new Mock<IOrderService>();
 
             var cartId = Guid.NewGuid();
-            var cartItemId = Guid.NewGuid();
+            var product = FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_NEW");
+            var cartItem = FixedData.GetNewCartItem(Guid.NewGuid(), product);
 
-            cartService.Setup(_ => _.RemoveItemAsync(cartId, cartItemId)).ReturnsAsync(FixedData.GetNewCart(cartId, "CART_1"));
+            cartService.Setup(_ => _.RemoveItemAsync(cartId, cartItem.Id)).ReturnsAsync(FixedData.GetNewCart(cartId, "USER_1"));
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
-            var result = await sut.RemoveItem(FixedData.GetNewRemoveCartItemAction(cartId, cartItemId)) as NoContentResult;
+            var result = await sut.RemoveItem(FixedData.GetNewRemoveCartItemAction(cartId, cartItem)) as NoContentResult;
 
             /// Assert
             result.StatusCode.Should().Be(204);
@@ -133,7 +137,7 @@ namespace DotNet_Sample.Test.ControllerTest
 
             var cartId = Guid.NewGuid();
 
-            cartService.Setup(_ => _.ClearCartAsync(cartId)).ReturnsAsync(FixedData.GetNewCart(cartId, "CART_1"));
+            cartService.Setup(_ => _.ClearCartAsync(cartId)).ReturnsAsync(FixedData.GetNewCart(cartId, "USER_1"));
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
@@ -149,16 +153,16 @@ namespace DotNet_Sample.Test.ControllerTest
             var cartService = new Mock<ICartService>();
             var orderService = new Mock<IOrderService>();
 
-            var cartId = Guid.NewGuid();
-            var order = FixedData.GetNewOrder(Guid.NewGuid(), "USER_1");
+            var cart = FixedData.GetNewCart(Guid.NewGuid(), "USER_1");
+            var order = FixedData.GetNewOrder(Guid.NewGuid(), cart);
 
-            cartService.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewCart(cartId, "CART_1"));
-            orderService.Setup(_ => _.GetOrderByCartIdAsync(cartId)).ReturnsAsync(order);
+            cartService.Setup(_ => _.GetCartByIdAsync(cart.Id)).ReturnsAsync(FixedData.GetNewCart(cart.Id, "USER_1"));
+            orderService.Setup(_ => _.GetOrderByCartIdAsync(cart.Id)).ReturnsAsync(order);
             orderService.Setup(_ => _.AddOrderAsync(order)).ReturnsAsync(order);
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
-            var result = await sut.CheckoutCart(cartId) as CreatedAtActionResult;
+            var result = await sut.CheckoutCart(cart.Id) as CreatedAtActionResult;
 
             /// Assert
             result.StatusCode.Should().Be(201);
@@ -170,16 +174,16 @@ namespace DotNet_Sample.Test.ControllerTest
             var cartService = new Mock<ICartService>();
             var orderService = new Mock<IOrderService>();
 
-            var cartId = Guid.NewGuid();
-            var order = FixedData.GetNewOrder(Guid.NewGuid(), "USER_1");
+            var cart = FixedData.GetNewCart(Guid.NewGuid(), "USER_1");
+            var order = FixedData.GetNewOrder(Guid.NewGuid(), cart);
 
-            cartService.Setup(_ => _.GetCartByIdAsync(cartId)).ReturnsAsync(FixedData.GetNewCart(cartId, "CART_1"));
-            orderService.Setup(_ => _.GetOrderByCartIdAsync(cartId)).ReturnsAsync((Order)default);
+            cartService.Setup(_ => _.GetCartByIdAsync(cart.Id)).ReturnsAsync(FixedData.GetNewCart(cart.Id, "USER_1"));
+            orderService.Setup(_ => _.GetOrderByCartIdAsync(cart.Id)).ReturnsAsync((Order)default);
             orderService.Setup(_ => _.AddOrderAsync(order)).ReturnsAsync(order);
             var sut = new CartController(cartService.Object, orderService.Object);
 
             /// Act
-            var result = await sut.CheckoutCart(cartId) as CreatedAtActionResult;
+            var result = await sut.CheckoutCart(cart.Id) as CreatedAtActionResult;
 
             /// Assert
             result.StatusCode.Should().Be(201);

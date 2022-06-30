@@ -2,9 +2,6 @@
 {
     public class BaseControllerTest
     {
-        public BaseControllerTest()
-        {
-
-        }
+        public BaseControllerTest() { }
     }
 }

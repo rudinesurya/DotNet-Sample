@@ -5,7 +5,6 @@ using DotNet_Sample.Test.MockData;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,10 +12,13 @@ namespace DotNet_Sample.Test.IntegrationTest
 {
     public class ProductTest : BaseIntegrationTest
     {
+        static int productCount;
+
         static Func<AppDbContext, bool> seed = (db) =>
         {
             // Seed Products
-            db.Products.AddRange(FixedData.GetFixedProducts());
+            productCount = 2;
+            db.Products.AddRange(SeedData.IPhoneX, SeedData.S20);
 
             db.SaveChangesAsync();
 
@@ -33,14 +35,14 @@ namespace DotNet_Sample.Test.IntegrationTest
 
             /// Assert
             result.Should().NotBeNull();
-            result.Count.Should().Be(FixedData.GetFixedProducts().Count());
+            result.Count.Should().Be(productCount);
         }
 
         [Fact]
         public async Task GetProductByIdAsync_ReturnFound()
         {
             /// Arrange 
-            var id = FixedData.GetFixedProducts().FirstOrDefault().Id;
+            var id = SeedData.IPhoneX.Id;
 
             /// Act
             var result = await TestClient.GetAsync<Product>($"/product/{id}");

@@ -21,7 +21,10 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IProductService>();
-            var productList = new List<Product>() { FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_1"), FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_2") };
+            var productList = new List<Product>() {
+                FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_1"),
+                FixedData.GetNewProduct(Guid.NewGuid(), "PRODUCT_2")
+            };
             service.Setup(_ => _.GetProductsAsync()).Returns(productList.AsQueryable());
             var sut = new ProductController(service.Object);
 

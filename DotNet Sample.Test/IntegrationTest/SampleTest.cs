@@ -25,7 +25,7 @@ namespace DotNet_Sample.Test.IntegrationTest
             var iPhoneX = await TestClient.PostAsyncAndReturn<Product, Product>("/product", FixedData.GetNewProduct(Guid.NewGuid(), "IPhone X"));
 
             // Add to cart
-            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", iPhoneX.Id));
+            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", iPhoneX));
 
             // checkout cart
             var cart = (await TestClient.GetAsync<List<Cart>>("/cart?$filter=UserName eq 'Tester'"))[0];
@@ -51,17 +51,17 @@ namespace DotNet_Sample.Test.IntegrationTest
             var s20 = await TestClient.PostAsyncAndReturn<Product, Product>("/product", FixedData.GetNewProduct(Guid.NewGuid(), "S20"));
 
             // Add to cart
-            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", iPhoneX.Id));
-            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", s20.Id));
+            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", iPhoneX));
+            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", s20));
 
             // Get the cart
             var cart = (await TestClient.GetAsync<List<Cart>>("/cart?$filter=UserName eq 'Tester'&$expand=Items($expand=Product)"))[0];
 
             // Change of decision. Remove iPhoneX
-            await TestClient.PostAsync("/cart/removeitem", FixedData.GetNewRemoveCartItemAction(cart.Id, cart.Items.Find(x => x.Product.Id == iPhoneX.Id).Id));
+            await TestClient.PostAsync("/cart/removeitem", FixedData.GetNewRemoveCartItemAction(cart.Id, cart.Items.Find(x => x.Product.Id == iPhoneX.Id)));
 
             // Add another s20
-            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", s20.Id));
+            await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", s20));
 
             // Verify that the cart contains only one product type with quantity=2
             cart = (await TestClient.GetAsync<List<Cart>>("/cart?$filter=UserName eq 'Tester'&$expand=Items"))[0];

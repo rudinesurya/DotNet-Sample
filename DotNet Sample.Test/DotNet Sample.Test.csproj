@@ -31,8 +31,4 @@
     <ProjectReference Include="..\DotNet Sample\DotNet Sample.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MockData\" />
-  </ItemGroup>
-
 </Project>

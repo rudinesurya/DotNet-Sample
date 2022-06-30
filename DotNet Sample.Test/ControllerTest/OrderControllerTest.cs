@@ -21,7 +21,9 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<IOrderService>();
-            var orderList = new List<Order>() { FixedData.GetNewOrder(Guid.NewGuid(), "USER_1"), FixedData.GetNewOrder(Guid.NewGuid(), "USER_2") };
+            var orderList = new List<Order>() {
+                FixedData.GetNewOrder(Guid.NewGuid(), FixedData.GetNewCart(Guid.NewGuid(), "USER_1"))
+            };
             service.Setup(_ => _.GetOrdersAsync()).Returns(orderList.AsQueryable());
             var sut = new OrderController(service.Object);
 
@@ -55,7 +57,7 @@ namespace DotNet_Sample.Test.ControllerTest
             /// Arrange
             var service = new Mock<IOrderService>();
             var orderId = Guid.NewGuid();
-            service.Setup(_ => _.GetOrderByIdAsync(orderId)).ReturnsAsync(FixedData.GetNewOrder(orderId, "USER_1"));
+            service.Setup(_ => _.GetOrderByIdAsync(orderId)).ReturnsAsync(FixedData.GetNewOrder(orderId, FixedData.GetNewCart(Guid.NewGuid(), "USER_1")));
             var sut = new OrderController(service.Object);
 
             /// Act

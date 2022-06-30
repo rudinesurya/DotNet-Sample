@@ -21,7 +21,10 @@ namespace DotNet_Sample.Test.ControllerTest
         {
             /// Arrange
             var service = new Mock<ICategoryService>();
-            var categoryList = new List<Category>() { FixedData.GetNewCategory(Guid.NewGuid(), "CAT_1"), FixedData.GetNewCategory(Guid.NewGuid(), "CAT_2") };
+            var categoryList = new List<Category>() {
+                FixedData.GetNewCategory(Guid.NewGuid(), "CAT_1"),
+                FixedData.GetNewCategory(Guid.NewGuid(), "CAT_2")
+            };
             service.Setup(_ => _.GetCategoriesAsync()).Returns(categoryList.AsQueryable());
             var sut = new CategoryController(service.Object);
 

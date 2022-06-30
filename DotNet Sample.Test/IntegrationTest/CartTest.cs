@@ -14,10 +14,15 @@ namespace DotNet_Sample.Test.IntegrationTest
 {
     public class CartTest : BaseIntegrationTest
     {
+        static int cartCount;
+
         static Func<AppDbContext, bool> seed = (db) =>
         {
             // Seed Carts
-            db.Carts.AddRange(FixedData.GetFixedCarts());
+            cartCount = 1;
+            db.Carts.AddRange(SeedData.MyCart);
+            db.Products.AddRange(SeedData.S20);
+
             db.SaveChangesAsync();
 
             return true;
@@ -33,14 +38,14 @@ namespace DotNet_Sample.Test.IntegrationTest
 
             /// Assert
             result.Should().NotBeNull();
-            result.Count.Should().Be(FixedData.GetFixedCarts().Count());
+            result.Count.Should().Be(cartCount);
         }
 
         [Fact]
         public async Task GetCartByIdAsync_ReturnFound()
         {
             /// Arrange 
-            var id = FixedData.GetFixedCarts().FirstOrDefault().Id;
+            var id = SeedData.MyCart.Id;
 
             /// Act
             var result = await TestClient.GetAsync<Cart>($"/cart/{id}");
@@ -64,10 +69,10 @@ namespace DotNet_Sample.Test.IntegrationTest
         public async Task AddItemAsync_ReturnSuccess()
         {
             /// Arrange
-            var productToAdd = FixedData.GetFixedProducts().FirstOrDefault();
+            var productToAdd = SeedData.S20;
 
             /// Act
-            var result = await TestClient.PostAsyncAndReturn<AddCartItem, Cart>("/cart/additem", FixedData.GetNewAddCartItemAction("USER_NEW", productToAdd.Id));
+            var result = await TestClient.PostAsyncAndReturn<AddCartItem, Cart>("/cart/additem", FixedData.GetNewAddCartItemAction("USER_NEW", productToAdd));
 
             /// Assert
             result.Should().NotBeNull();
@@ -78,11 +83,11 @@ namespace DotNet_Sample.Test.IntegrationTest
         public async Task RemoveItemAsync_ReturnSuccess()
         {
             /// Arrange
-            var cartToRemove = FixedData.GetFixedCarts().FirstOrDefault();
-            var cartItemToRemove = cartToRemove.Items.FirstOrDefault();
+            var cartToRemove = SeedData.MyCart;
+            var cartItemToRemove = SeedData.MyCart.Items.FirstOrDefault();
 
             /// Act
-            var result = await TestClient.PostAsync<RemoveCartItem>("/cart/removeitem", FixedData.GetNewRemoveCartItemAction(cartToRemove.Id, cartItemToRemove.Id));
+            var result = await TestClient.PostAsync<RemoveCartItem>("/cart/removeitem", FixedData.GetNewRemoveCartItemAction(cartToRemove.Id, cartItemToRemove));
 
             /// Assert
             result.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
@@ -92,7 +97,7 @@ namespace DotNet_Sample.Test.IntegrationTest
         public async Task ClearCartAsync_ReturnSuccess()
         {
             /// Arrange
-            var cartToClear = FixedData.GetFixedCarts().FirstOrDefault();
+            var cartToClear = SeedData.MyCart;
 
             /// Act
             var result = await TestClient.PostAsync<Guid>("/cart/clearcart", cartToClear.Id);
@@ -105,7 +110,7 @@ namespace DotNet_Sample.Test.IntegrationTest
         public async Task CheckoutCartAsync_ReturnSuccess()
         {
             /// Arrange
-            var cartToCheckout = FixedData.GetFixedCarts().FirstOrDefault();
+            var cartToCheckout = SeedData.MyCart;
 
             /// Act
             var result = await TestClient.PostAsyncAndReturn<Guid, Cart>("/cart/checkout", cartToCheckout.Id);
