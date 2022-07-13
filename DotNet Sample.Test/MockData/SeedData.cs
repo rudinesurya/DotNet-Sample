@@ -1,6 +1,7 @@
 ﻿using DotNet_Sample.Entity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNet_Sample.Test.MockData
 {
@@ -77,7 +78,8 @@ namespace DotNet_Sample.Test.MockData
         public static Order MyOrder = new Order()
         {
             Id = Guid.NewGuid(),
-            Cart = MyCart,
+            CartId = MyCart.Id,
+            Items = MyCart.Items.Select(x => OrderItem.CreateFrom(x)).ToList(),
             UserName = MyCart.UserName,
             TotalPrice = MyCart.TotalPrice,
             FirstName = "",

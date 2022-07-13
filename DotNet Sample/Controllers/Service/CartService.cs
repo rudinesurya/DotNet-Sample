@@ -30,9 +30,9 @@ namespace DotNet_Sample.Controllers.Service
 
         public IQueryable<Cart> GetCartsAsync() => DbContext.Carts.AsQueryable();
 
-        public Task<Cart> GetCartByIdAsync(Guid id) => DbContext.Carts.FirstOrDefaultAsync(c => c.Id == id);
+        public Task<Cart> GetCartByIdAsync(Guid id) => DbContext.Carts.Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
 
-        public Task<Cart> GetCartByUserNameAsync(string userName) => DbContext.Carts.FirstOrDefaultAsync(c => c.UserName == userName);
+        public Task<Cart> GetCartByUserNameAsync(string userName) => DbContext.Carts.Include(c => c.Items).FirstOrDefaultAsync(c => c.UserName == userName);
 
         public async Task<Cart> AddItemAsync(string userName, Guid productId, int quantity)
         {

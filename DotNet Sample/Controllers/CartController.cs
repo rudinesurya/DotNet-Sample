@@ -100,7 +100,8 @@ namespace DotNet_Sample.Controllers
                 var newOrder = new Order()
                 {
                     Id = Guid.NewGuid(),
-                    Cart = cart,
+                    CartId = cartId,
+                    Items = cart.Items.Select(x => OrderItem.CreateFrom(x)).ToList(),
                     UserName = cart.UserName,
                     TotalPrice = cart.TotalPrice,
                     FirstName = "",

@@ -40,9 +40,9 @@ namespace DotNet_Sample.Test.IntegrationTest
             await TestClient.PostAsync("/cart/checkout", cart.Id);
 
             // Verify that the order gets created under the user name
-            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester' &$expand=Cart($expand=Items)");
+            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester' &$expand=Items");
             result.Count.Should().Be(1);
-            result[0].Cart.Items[0].ProductId.Should().Be(iPhoneX.Id);
+            result[0].Items[0].ProductId.Should().Be(iPhoneX.Id);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace DotNet_Sample.Test.IntegrationTest
             await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", s20));
 
             // Get the cart
-            var cart = (await TestClient.GetAsync<List<Cart>>("/cart?$filter=UserName eq 'Tester'&$expand=Items($expand=Product)"))[0];
+            var cart = (await TestClient.GetAsync<List<Cart>>("/cart?$filter=UserName eq 'Tester' &$expand=Items($expand=Product)"))[0];
 
             // Change of decision. Remove iPhoneX
             await TestClient.PostAsync("/cart/removeitem", FixedData.GetNewRemoveCartItemAction(cart.Id, cart.Items.Find(x => x.Product.Id == iPhoneX.Id)));
@@ -70,17 +70,17 @@ namespace DotNet_Sample.Test.IntegrationTest
             await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", s20));
 
             // Verify that the cart contains only one product type with quantity=2
-            cart = (await TestClient.GetAsync<List<Cart>>("/cart?$filter=UserName eq 'Tester'&$expand=Items"))[0];
+            cart = (await TestClient.GetAsync<List<Cart>>("/cart?$filter=UserName eq 'Tester' &$expand=Items"))[0];
             cart.Items.Count.Should().Be(1);
             cart.Items[0].Quantity.Should().Be(2);
 
             await TestClient.PostAsync("/cart/checkout", cart.Id);
 
             // Verify that the order gets created under the user name
-            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester' &$expand=Cart($expand=Items)");
+            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester' &$expand=Items");
             result.Count.Should().Be(1);
-            result[0].Cart.Items[0].ProductId.Should().Be(s20.Id);
-            result[0].Cart.Items[0].Quantity.Should().Be(2);
+            result[0].Items[0].ProductId.Should().Be(s20.Id);
+            result[0].Items[0].Quantity.Should().Be(2);
         }
     }
 }

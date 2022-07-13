@@ -1,6 +1,7 @@
 ﻿using DotNet_Sample.Controllers.Cart_Action;
 using DotNet_Sample.Entity;
 using System;
+using System.Linq;
 
 namespace DotNet_Sample.Test.MockData
 {
@@ -79,7 +80,8 @@ namespace DotNet_Sample.Test.MockData
             return new Order()
             {
                 Id = id,
-                Cart = cart,
+                CartId = cart.Id,
+                Items = cart.Items.Select(x => OrderItem.CreateFrom(x)).ToList(),
                 UserName = cart.UserName,
                 TotalPrice = cart.TotalPrice,
                 FirstName = "",
