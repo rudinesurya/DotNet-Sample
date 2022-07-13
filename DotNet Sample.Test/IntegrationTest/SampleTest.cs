@@ -1,4 +1,5 @@
-﻿using DotNet_Sample.Entity;
+﻿using DotNet_Sample.Data;
+using DotNet_Sample.Entity;
 using DotNet_Sample.Test.Helper;
 using DotNet_Sample.Test.MockData;
 using FluentAssertions;
@@ -11,20 +12,27 @@ namespace DotNet_Sample.Test.IntegrationTest
 {
     public class SampleTest : BaseIntegrationTest
     {
-        public SampleTest() : base("Test", null) { }
+        static Func<AppDbContext, bool> seed = (db) =>
+        {
+            // Seed Products
+            db.Products.AddRange(SeedData.IPhoneX, SeedData.S20);
+
+            db.SaveChangesAsync();
+
+            return true;
+        };
+
+        public SampleTest() : base("Test", seed) { }
 
         [Fact]
         public async Task TestForSuccessfullOrderCreation()
         {
-            /// User creates product
             /// Add product to cart and checkout
             /// Verify that the order gets created under the user name
 
 
-            // Create product
-            var iPhoneX = await TestClient.PostAsyncAndReturn<Product, Product>("/product", FixedData.GetNewProduct(Guid.NewGuid(), "IPhone X"));
-
             // Add to cart
+            var iPhoneX = SeedData.IPhoneX;
             await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", iPhoneX));
 
             // checkout cart
@@ -32,25 +40,23 @@ namespace DotNet_Sample.Test.IntegrationTest
             await TestClient.PostAsync("/cart/checkout", cart.Id);
 
             // Verify that the order gets created under the user name
-            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester'");
+            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester' &$expand=Cart($expand=Items)");
             result.Count.Should().Be(1);
+            result[0].Cart.Items[0].ProductId.Should().Be(iPhoneX.Id);
         }
 
         [Fact]
         public async Task StressTest1()
         {
-            /// User creates 2 products
             /// Add 2 product to cart and checkout
             /// remove one product and add another to make quantity=2
             /// Verify that the cart contains only one product type with quantity=2
             /// Verify that the order gets created under the user name
 
 
-            // Create product
-            var iPhoneX = await TestClient.PostAsyncAndReturn<Product, Product>("/product", FixedData.GetNewProduct(Guid.NewGuid(), "IPhone X"));
-            var s20 = await TestClient.PostAsyncAndReturn<Product, Product>("/product", FixedData.GetNewProduct(Guid.NewGuid(), "S20"));
-
             // Add to cart
+            var iPhoneX = SeedData.IPhoneX;
+            var s20 = SeedData.S20;
             await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", iPhoneX));
             await TestClient.PostAsync("/cart/additem", FixedData.GetNewAddCartItemAction("Tester", s20));
 
@@ -71,8 +77,10 @@ namespace DotNet_Sample.Test.IntegrationTest
             await TestClient.PostAsync("/cart/checkout", cart.Id);
 
             // Verify that the order gets created under the user name
-            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester'");
+            var result = await TestClient.GetAsync<List<Order>>("/order?$filter=UserName eq 'Tester' &$expand=Cart($expand=Items)");
             result.Count.Should().Be(1);
+            result[0].Cart.Items[0].ProductId.Should().Be(s20.Id);
+            result[0].Cart.Items[0].Quantity.Should().Be(2);
         }
     }
 }
