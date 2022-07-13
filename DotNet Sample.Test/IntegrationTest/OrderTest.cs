@@ -47,8 +47,6 @@ namespace DotNet_Sample.Test.IntegrationTest
             /// Act
             var result = await TestClient.GetAsync<Order>($"/order/{id}");
 
-            var result33 = await TestClient.GetAsync<List<Cart>>($"/cart");
-
             /// Assert
             result.Should().NotBeNull();
             result.Id.Should().Be(id);
