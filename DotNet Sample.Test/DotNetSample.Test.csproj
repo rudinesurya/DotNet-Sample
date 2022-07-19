@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNet Sample\DotNet Sample.csproj" />
+    <ProjectReference Include="..\DotNet Sample\DotNetSample.csproj" />
   </ItemGroup>
 
 </Project>

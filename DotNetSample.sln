@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet Sample", "DotNet Sample\DotNet Sample.csproj", "{E5FAF2C6-AC3B-444D-9A64-4CE4C49F3570}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetSample", "DotNet Sample\DotNetSample.csproj", "{E5FAF2C6-AC3B-444D-9A64-4CE4C49F3570}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet Sample.Test", "DotNet Sample.Test\DotNet Sample.Test.csproj", "{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetSample.Test", "DotNet Sample.Test\DotNetSample.Test.csproj", "{DB1A0F7F-D9DB-4C1D-BDFA-CEAC8C0CBDEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
